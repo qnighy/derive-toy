@@ -46,7 +46,11 @@ export interface WhyNot {
     child: Proposition;
 }
 
-export type Proposition = Atomic | Negation | Lollipop | Tensor | Par | With | Plus | OfCourse | WhyNot;
+export interface Error {
+    kind: "error";
+}
+
+export type Proposition = Atomic | Negation | Lollipop | Tensor | Par | With | Plus | OfCourse | WhyNot | Error;
 
 export function newAtomic(name: string): Atomic {
     return { kind: "atomic", name }
@@ -103,6 +107,7 @@ export function pp_prop(p: Proposition): string {
             }
         case "ofcourse": return `!${pp_prop_level(p.child, lv)}`;
         case "whynot": return `?${pp_prop_level(p.child, lv)}`;
+        case "error": return "[ERROR]";
     }
 }
 
@@ -154,5 +159,6 @@ function prop_level(p: Proposition): number {
             }
         case "ofcourse": return 2;
         case "whynot": return 2;
+        case "error": return 0;
     }
 }
