@@ -1,5 +1,5 @@
 import {createStore, combineReducers, Action} from 'redux'
-import { Proposition, newTensor, newAtomic } from './models/LinearProposition';
+import * as LinearProposition from './models/LinearProposition';
 
 export default createStore(
   combineReducers({
@@ -8,11 +8,11 @@ export default createStore(
 )
 
 export type ReduxState = {
-  prop1: Proposition,
+  prop1: LinearProposition.Proposition,
 }
 
 export type ReduxAction = Action // | SomeAction
 
-function prop1Reducer(state: Proposition = newTensor([newAtomic("A"), newAtomic("B")]), action: any): Proposition {
+function prop1Reducer(state: LinearProposition.Proposition = LinearProposition.newTensor([LinearProposition.newAtomic("A"), LinearProposition.newAtomic("B")]), action: any): LinearProposition.Proposition {
   return state;
 }
