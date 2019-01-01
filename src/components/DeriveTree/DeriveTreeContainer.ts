@@ -8,6 +8,6 @@ export class ActionDispatcher {
 }
 
 export default connect(
-    (state: ReduxState) => ({}),
+    (state: ReduxState) => ({ prop1: state.prop1 }),
     (dispatch: Dispatch<ReduxAction>) => ({actions: new ActionDispatcher(dispatch)})
 )(DeriveTree)
