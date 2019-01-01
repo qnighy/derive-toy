@@ -1,9 +1,9 @@
 import * as React from "react";
 import { ActionDispatcher } from "./DeriveTreeContainer";
-import * as LinearProposition from "../../models/LinearProposition";
+import * as Linear from "../../models/Linear";
 
 interface Props {
-    prop1: LinearProposition.Proposition,
+    prop1: Linear.Proposition,
     actions: ActionDispatcher;
 }
 
@@ -12,7 +12,7 @@ export class DeriveTree extends React.Component<Props, {}> {
         const { prop1 } = this.props;
         return (
             <div>
-                <p>{LinearProposition.pp_prop(prop1)} ⊢ A</p>
+                <p>{Linear.pp_prop(prop1)} ⊢ A</p>
             </div>
         )
     }
