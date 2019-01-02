@@ -10,9 +10,11 @@ interface Props {
 export class DeriveTreeNode extends React.Component<Props, {}> {
     render() {
         const { cproof } = this.props;
-        return <div className="DeriveTreeNode-node">
-            <div className="DeriveTreeNode-sequent">
-                <Sequent env={ cproof.env } />
+        return <div className="DeriveTreeNode-subtree">
+            <div className="DeriveTreeNode-node">
+                <div className="DeriveTreeNode-sequent">
+                    <Sequent env={ cproof.env } />
+                </div>
             </div>
             <div className="DeriveTreeNode-children">
                 {
