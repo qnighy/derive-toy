@@ -1,17 +1,15 @@
 import * as React from "react";
-import { ActionDispatcher } from "./DeriveTreeNodeContainer";
 import * as Linear from "../../models/Linear";
 import { Sequent } from "../Sequent/Sequent";
 import './DeriveTreeNode.css';
 
 interface Props {
     cproof: Linear.CheckedProof,
-    actions: ActionDispatcher;
 }
 
 export class DeriveTreeNode extends React.Component<Props, {}> {
     render() {
-        const { cproof, actions } = this.props;
+        const { cproof } = this.props;
         return <div className="DeriveTreeNode-node">
             <div className="DeriveTreeNode-sequent">
                 <Sequent env={ cproof.env } />
@@ -20,7 +18,7 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
                 {
                     cproof.children.map((child, i) =>
                         <div key={ `childproof${i}` } className="DeriveTreeNode-child">
-                            <DeriveTreeNode cproof={child} actions={actions} />
+                            <DeriveTreeNode cproof={child} />
                         </div>
                     )
                 }
