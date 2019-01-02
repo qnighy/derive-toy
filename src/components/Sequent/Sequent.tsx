@@ -32,7 +32,7 @@ export class Sequent extends React.Component<Props, {}> {
                         ", "
                     )
                 }
-                ⊢
+                { " ⊢ " }
                 {
                     join_elements(
                         right_props.map(([index, prop]) => <PrettyProposition key={index} proposition={prop} />),
