@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { DeriveTree } from './DeriveTree';
-import { ActionDispatcher } from './DeriveTreeContainer';
+import { DeriveTree } from './DeriveTreeNode';
+import { ActionDispatcher } from './DeriveTreeNodeContainer';
 import * as Linear from '../../models/Linear';
 
 it('renders without crashing', () => {

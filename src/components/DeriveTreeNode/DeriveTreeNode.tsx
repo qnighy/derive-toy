@@ -1,8 +1,8 @@
 import * as React from "react";
-import { ActionDispatcher } from "./DeriveTreeContainer";
+import { ActionDispatcher } from "./DeriveTreeNodeContainer";
 import * as Linear from "../../models/Linear";
 import { Sequent } from "../Sequent/Sequent";
-import './DeriveTree.css';
+import './DeriveTreeNode.css';
 
 interface Props {
     cproof: Linear.CheckedProof,

@@ -1,7 +1,7 @@
 import { ReduxAction, ReduxState } from "../../store";
 import { connect } from "react-redux";
 import { Dispatch } from "react";
-import { DeriveTree } from "./DeriveTree";
+import { DeriveTree } from "./DeriveTreeNode";
 
 export class ActionDispatcher {
     constructor(private dispatch: (action: ReduxAction) => void) {}
