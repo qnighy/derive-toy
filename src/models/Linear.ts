@@ -727,3 +727,33 @@ function unify(prop1: Proposition, prop2: Proposition) {
 function exhaustive(x: never): never {
     return x;
 }
+
+export function example(): CheckedProof {
+    const prop = newLollipop(newTensor([newAtomic("A"), newAtomic("B")]), newTensor([newAtomic("B"), newAtomic("A")]));
+    const proof: Proof = {
+        kind: "lollipop_right",
+        index: '0',
+        child: {
+            kind: "tensor_left",
+            index: '0.0',
+            child: {
+                kind: "tensor_right",
+                index: '0.1',
+                children: [
+                    {
+                        kind: "axiom",
+                        left_index: '0.0.1',
+                        right_index: '0.1.0',
+                    },
+                    {
+                        kind: "axiom",
+                        left_index: '0.0.0',
+                        right_index: '0.1.1',
+                    },
+                ],
+            },
+        },
+    };
+    const env: Environment = Environment.toplevel(prop);
+    return check_proof(env, proof);
+}
