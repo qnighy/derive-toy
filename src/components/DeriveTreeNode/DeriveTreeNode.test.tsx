@@ -12,6 +12,6 @@ it('renders without crashing', () => {
     const ui = updateUiStateFromProof(cproof);
 
     const div = document.createElement('div');
-    ReactDOM.render(<DeriveTreeNode cproof={Linear.example()} ui={ui} />, div);
+    ReactDOM.render(<DeriveTreeNode cproof={Linear.example()} ui={ui} path={null} expand={() => {}} />, div);
     ReactDOM.unmountComponentAtNode(div);
 });

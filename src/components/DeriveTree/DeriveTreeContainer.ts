@@ -5,5 +5,13 @@ import { DeriveTree } from "./DeriveTree";
 
 export default connect(
     (state: ReduxState) => ({ cproof: state.cproof, ui: state.ui }),
-    (dispatch: Dispatch<ReduxAction>) => ({})
+    (dispatch: Dispatch<ReduxAction>) => ({
+        expand: (path: number[], new_expanded: boolean): void => {
+            dispatch({
+                type: 'EXPAND_TREE',
+                path,
+                new_expanded,
+            })
+        }
+    })
 )(DeriveTree)

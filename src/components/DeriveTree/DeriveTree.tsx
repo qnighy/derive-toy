@@ -5,11 +5,13 @@ import {
     DeriveTreeNode,
     UiState as NodeUiState,
     updateUiStateFromProof as updateNodeUiStateFromProof,
+    reduceExpanded as reduceNodeExpanded,
 } from "../DeriveTreeNode/DeriveTreeNode";
 
 interface Props {
     cproof: Linear.CheckedProof,
     ui: UiState,
+    expand: (path: number[], new_expanded: boolean) => void,
 }
 
 export interface UiState {
@@ -28,11 +30,18 @@ export function updateUiStateFromProof(cproof: Linear.CheckedProof, state?: UiSt
     }
 }
 
+export function reduceExpanded(ui: UiState, path: number[], new_expanded: boolean): UiState {
+    const new_node = reduceNodeExpanded(ui.node, path, 0, new_expanded);
+    return {
+        node: new_node,
+    };
+}
+
 export class DeriveTree extends React.Component<Props, {}> {
     render() {
-        const { cproof, ui } = this.props;
+        const { cproof, ui, expand } = this.props;
         return <div className="DeriveTree-root">
-            <DeriveTreeNode cproof={cproof} ui={ui.node} />
+            <DeriveTreeNode cproof={cproof} ui={ui.node} path={null} expand={expand} />
         </div>;
     }
 }

@@ -7,6 +7,8 @@ import './DeriveTreeNode.css';
 interface Props {
     cproof: Linear.CheckedProof,
     ui: UiState,
+    path: RevPath | null,
+    expand: (path: number[], new_expanded: boolean) => void,
 }
 
 export interface UiState {
@@ -28,9 +30,41 @@ export function updateUiStateFromProof(cproof: Linear.CheckedProof, state?: UiSt
     }
 }
 
+export function reduceExpanded(ui: UiState, path: number[], path_index: number, new_expanded: boolean): UiState {
+    let new_ui: UiState = Object.assign({}, ui);
+    if(path_index >= path.length) {
+        new_ui.expanded = new_expanded;
+        return new_ui;
+    }
+    let path_comp = path[path_index];
+    if(path_comp < new_ui.children.length) {
+        new_ui.children = Array.from(new_ui.children);
+        new_ui.children[path_comp] = reduceExpanded(new_ui.children[path_comp], path, path_index + 1, new_expanded);
+    }
+    return new_ui;
+}
+
+interface RevPath {
+    index: number;
+    parent: RevPath | null;
+};
+
+function pathFromRevPath(path: RevPath | null): number[] {
+    let ret: number[] = [];
+    while(path !== null) {
+        ret.unshift(path.index);
+        path = path.parent;
+    }
+    return ret;
+}
+
 export class DeriveTreeNode extends React.Component<Props, {}> {
+    handleToggle = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        const { ui, path, expand } = this.props;
+        expand(pathFromRevPath(path), !ui.expanded);
+    }
     render() {
-        const { cproof, ui } = this.props;
+        const { cproof, ui, path, expand } = this.props;
         const expandClass = ui.expanded ? "DeriveTreeNode-expanded" : "DeriveTreeNode-folded";
         return <div className="DeriveTreeNode-subtree">
             <div className="DeriveTreeNode-node">
@@ -38,18 +72,22 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
                     <Sequent env={ cproof.env } />
                 </div>
                 <span className="DeriveTreeNode-menu">
-                    <button className="DeriveTreeNode-expand-button">
+                    <button className="DeriveTreeNode-expand-button" onClick={this.handleToggle}>
                         <FontAwesomeIcon icon={ ui.expanded ? "minus-square" : "plus-square" } />
                     </button>
                 </span>
             </div>
             <div className={`DeriveTreeNode-children ${expandClass}`}>
                 {
-                    cproof.children.map((child, i) =>
-                        <div key={ `childproof${i}` } className="DeriveTreeNode-child">
-                            <DeriveTreeNode cproof={child} ui={ui.children[i]} />
-                        </div>
-                    )
+                    cproof.children.map((child, i) => {
+                        const subpath = {
+                            index: i,
+                            parent: path,
+                        };
+                        return <div key={ `childproof${i}` } className="DeriveTreeNode-child">
+                            <DeriveTreeNode cproof={child} ui={ui.children[i]} path={subpath} expand={expand} />
+                        </div>;
+                    })
                 }
             </div>
         </div>;
