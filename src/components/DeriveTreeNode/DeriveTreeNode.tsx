@@ -6,11 +6,25 @@ import './DeriveTreeNode.css';
 
 interface Props {
     cproof: Linear.CheckedProof,
+    ui: UiProps | null,
+}
+
+export interface UiProps {
+    expanded: boolean;
+    children: UiProps[];
+}
+
+function ui_default(): UiProps {
+    return {
+        expanded: true,
+        children: [],
+    }
 }
 
 export class DeriveTreeNode extends React.Component<Props, {}> {
     render() {
-        const { cproof } = this.props;
+        const { cproof, ui: ui_ } = this.props;
+        const ui = ui_ || ui_default();
         return <div className="DeriveTreeNode-subtree">
             <div className="DeriveTreeNode-node">
                 <div className="DeriveTreeNode-sequent">
@@ -24,7 +38,7 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
                 {
                     cproof.children.map((child, i) =>
                         <div key={ `childproof${i}` } className="DeriveTreeNode-child">
-                            <DeriveTreeNode cproof={child} />
+                            <DeriveTreeNode cproof={child} ui={ui.children[i] || null} />
                         </div>
                     )
                 }

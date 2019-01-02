@@ -4,6 +4,6 @@ import { Dispatch } from "react";
 import { DeriveTree } from "./DeriveTree";
 
 export default connect(
-    (state: ReduxState) => ({ cproof: state.cproof }),
+    (state: ReduxState) => ({ cproof: state.cproof, ui: state.ui }),
     (dispatch: Dispatch<ReduxAction>) => ({})
 )(DeriveTree)
