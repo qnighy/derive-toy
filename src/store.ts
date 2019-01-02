@@ -3,16 +3,16 @@ import * as Linear from './models/Linear';
 
 export default createStore(
   combineReducers({
-    prop1: prop1Reducer,
+    cproof: cproofReducer,
   })
 )
 
 export type ReduxState = {
-  prop1: Linear.Proposition,
+  cproof: Linear.CheckedProof,
 }
 
 export type ReduxAction = Action // | SomeAction
 
-function prop1Reducer(state: Linear.Proposition = Linear.newTensor([Linear.newAtomic("A"), Linear.newAtomic("B")]), action: any): Linear.Proposition {
+function cproofReducer(state: Linear.CheckedProof = Linear.example(), action: any): Linear.CheckedProof {
   return state;
 }
