@@ -1,0 +1,28 @@
+.DeriveTree-tree {
+    display: grid;
+    padding: 1px;
+    /* border: 1px #333333 solid; /* debug */
+}
+
+.DeriveTree-sequent {
+    text-align: center;
+    grid-row: 1 / 2;
+    grid-column: 0 / 1;
+    border-bottom: 1px black solid;
+}
+
+.DeriveTree-children {
+    grid-row: 0 / 1;
+    grid-column: 0 / 1;
+
+    margin-right: 10px;
+    margin-left: 10px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.DeriveTree-child {
+    padding-right: 10px;
+    padding-left: 10px;
+}

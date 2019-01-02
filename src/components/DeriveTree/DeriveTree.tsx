@@ -2,6 +2,7 @@ import * as React from "react";
 import { ActionDispatcher } from "./DeriveTreeContainer";
 import * as Linear from "../../models/Linear";
 import { Sequent } from "../Sequent/Sequent";
+import './DeriveTree.css';
 
 interface Props {
     cproof: Linear.CheckedProof,
@@ -11,13 +12,19 @@ interface Props {
 export class DeriveTree extends React.Component<Props, {}> {
     render() {
         const { cproof, actions } = this.props;
-        return <div>
-            <Sequent env={ cproof.env } />
-            <ul>
+        return <div className="DeriveTree-tree">
+            <div className="DeriveTree-sequent">
+                <Sequent env={ cproof.env } />
+            </div>
+            <div className="DeriveTree-children">
                 {
-                    cproof.children.map((child) => <li><DeriveTree cproof={child} actions={actions} /></li>)
+                    cproof.children.map((child) =>
+                        <div className="DeriveTree-child">
+                            <DeriveTree cproof={child} actions={actions} />
+                        </div>
+                    )
                 }
-            </ul>
+            </div>
         </div>;
     }
 }
