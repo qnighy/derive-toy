@@ -1,17 +1,17 @@
-.DeriveTree-tree {
+.DeriveTreeNode-node {
     display: grid;
     padding: 1px;
     /* border: 1px #333333 solid; /* debug */
 }
 
-.DeriveTree-sequent {
+.DeriveTreeNode-sequent {
     text-align: center;
     grid-row: 1 / 2;
     grid-column: 0 / 1;
     border-bottom: 1px black solid;
 }
 
-.DeriveTree-children {
+.DeriveTreeNode-children {
     grid-row: 0 / 1;
     grid-column: 0 / 1;
 
@@ -22,7 +22,7 @@
     justify-content: center;
 }
 
-.DeriveTree-child {
+.DeriveTreeNode-child {
     padding-right: 10px;
     padding-left: 10px;
 }

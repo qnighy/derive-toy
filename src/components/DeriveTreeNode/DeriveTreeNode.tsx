@@ -12,14 +12,14 @@ interface Props {
 export class DeriveTreeNode extends React.Component<Props, {}> {
     render() {
         const { cproof, actions } = this.props;
-        return <div className="DeriveTree-tree">
-            <div className="DeriveTree-sequent">
+        return <div className="DeriveTreeNode-node">
+            <div className="DeriveTreeNode-sequent">
                 <Sequent env={ cproof.env } />
             </div>
-            <div className="DeriveTree-children">
+            <div className="DeriveTreeNode-children">
                 {
                     cproof.children.map((child) =>
-                        <div className="DeriveTree-child">
+                        <div className="DeriveTreeNode-child">
                             <DeriveTreeNode cproof={child} actions={actions} />
                         </div>
                     )
