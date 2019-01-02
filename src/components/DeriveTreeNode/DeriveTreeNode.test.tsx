@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faMinusSquare } from '@fortawesome/free-solid-svg-icons'
+import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 import { DeriveTreeNode, updateUiStateFromProof } from './DeriveTreeNode';
 import * as Linear from '../../models/Linear';
 
-library.add(faMinusSquare)
+library.add(faMinusSquare, faPlusSquare)
 
 it('renders without crashing', () => {
     const cproof = Linear.example();

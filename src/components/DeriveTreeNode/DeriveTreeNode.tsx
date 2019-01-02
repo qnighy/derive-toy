@@ -31,16 +31,17 @@ export function updateUiStateFromProof(cproof: Linear.CheckedProof, state?: UiSt
 export class DeriveTreeNode extends React.Component<Props, {}> {
     render() {
         const { cproof, ui } = this.props;
+        const expandClass = ui.expanded ? "DeriveTreeNode-expanded" : "DeriveTreeNode-folded";
         return <div className="DeriveTreeNode-subtree">
             <div className="DeriveTreeNode-node">
                 <div className="DeriveTreeNode-sequent">
                     <Sequent env={ cproof.env } />
                 </div>
                 <span className="DeriveTreeNode-menu">
-                    <FontAwesomeIcon icon="minus-square" />
+                    <FontAwesomeIcon icon={ ui.expanded ? "minus-square" : "plus-square" } />
                 </span>
             </div>
-            <div className="DeriveTreeNode-children">
+            <div className={`DeriveTreeNode-children ${expandClass}`}>
                 {
                     cproof.children.map((child, i) =>
                         <div key={ `childproof${i}` } className="DeriveTreeNode-child">

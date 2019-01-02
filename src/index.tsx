@@ -6,9 +6,9 @@ import store from './store';
 import * as serviceWorker from './serviceWorker';
 import DeriveTree from './components/DeriveTree/DeriveTreeContainer';
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faMinusSquare } from '@fortawesome/free-solid-svg-icons'
+import { faMinusSquare, faPlusSquare, faPlus } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faMinusSquare)
+library.add(faMinusSquare, faPlusSquare)
 
 ReactDOM.render(
     <Provider store={store}>
