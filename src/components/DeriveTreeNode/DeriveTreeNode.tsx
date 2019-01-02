@@ -1,4 +1,5 @@
 import * as React from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as Linear from "../../models/Linear";
 import { Sequent } from "../Sequent/Sequent";
 import './DeriveTreeNode.css';
@@ -15,6 +16,9 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
                 <div className="DeriveTreeNode-sequent">
                     <Sequent env={ cproof.env } />
                 </div>
+                <span className="DeriveTreeNode-menu">
+                    <FontAwesomeIcon icon="minus-square" />
+                </span>
             </div>
             <div className="DeriveTreeNode-children">
                 {
