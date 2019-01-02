@@ -15,24 +15,19 @@
     grid-area: "node";
     border-bottom: 1px black solid;
 
-    display: grid;
-    grid-template-columns: 1fr 2em;
-    grid-template-rows:
-        1fr;
-    grid-template-areas:
-        "sequent menu";
+    position: relative;
 }
 
 .DeriveTreeNode-sequent {
-    grid-area: "sequent";
-
+    padding-left: 1em;
+    padding-right: 1em;
     text-align: center;
 }
 
 .DeriveTreeNode-menu {
-    grid-area: "menu";
-
-    text-align: right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
     font-size: 80%;
 }
 
