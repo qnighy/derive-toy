@@ -1,25 +1,21 @@
 import {createStore, combineReducers, Action} from 'redux'
 import * as Linear from './models/Linear';
-import { UiProps } from './components/DeriveTree/DeriveTree';
-
-export default createStore(
-  combineReducers({
-    cproof: cproofReducer,
-    ui: uiStateReducer,
-  })
-)
+import { UiState, updateUiStateFromProof } from './components/DeriveTree/DeriveTree';
 
 export type ReduxState = {
-  cproof: Linear.CheckedProof,
-  ui: UiProps,
+    cproof: Linear.CheckedProof,
+    ui: UiState,
 }
 
 export type ReduxAction = Action // | SomeAction
 
-function cproofReducer(state: Linear.CheckedProof = Linear.example(), action: any): Linear.CheckedProof {
-  return state;
+const initialState: ReduxState = {
+    cproof: Linear.example(),
+    ui: updateUiStateFromProof(Linear.example()),
+};
+
+function reduce(state: ReduxState = initialState, action: any): ReduxState {
+    return state;
 }
 
-function uiStateReducer(state: UiProps | null = null, action: any): UiProps | null {
-  return state;
-}
+export default createStore(reduce, initialState);

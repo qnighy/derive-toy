@@ -1,27 +1,36 @@
 import * as React from "react";
 import * as Linear from "../../models/Linear";
 import './DeriveTree.css';
-import { DeriveTreeNode, UiProps as NodeUiProps } from "../DeriveTreeNode/DeriveTreeNode";
+import {
+    DeriveTreeNode,
+    UiState as NodeUiState,
+    updateUiStateFromProof as updateNodeUiStateFromProof,
+} from "../DeriveTreeNode/DeriveTreeNode";
 
 interface Props {
     cproof: Linear.CheckedProof,
-    ui: UiProps | null,
+    ui: UiState,
 }
 
-export interface UiProps {
-    node: NodeUiProps | null;
+export interface UiState {
+    node: NodeUiState;
 }
 
-function ui_default(): UiProps {
-    return {
-        node: null,
-    };
+export function updateUiStateFromProof(cproof: Linear.CheckedProof, state?: UiState | undefined): UiState {
+    if(state === undefined) {
+        return {
+            node: updateNodeUiStateFromProof(cproof),
+        };
+    } else {
+        return {
+            node: updateNodeUiStateFromProof(cproof, state.node),
+        };
+    }
 }
 
 export class DeriveTree extends React.Component<Props, {}> {
     render() {
-        const { cproof, ui: ui_ } = this.props;
-        const ui = ui_ || ui_default();
+        const { cproof, ui } = this.props;
         return <div className="DeriveTree-root">
             <DeriveTreeNode cproof={cproof} ui={ui.node} />
         </div>;
