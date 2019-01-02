@@ -1,7 +1,7 @@
 import { ReduxAction, ReduxState } from "../../store";
 import { connect } from "react-redux";
 import { Dispatch } from "react";
-import { DeriveTree } from "./DeriveTreeNode";
+import { DeriveTreeNode } from "./DeriveTreeNode";
 
 export class ActionDispatcher {
     constructor(private dispatch: (action: ReduxAction) => void) {}
@@ -10,4 +10,4 @@ export class ActionDispatcher {
 export default connect(
     (state: ReduxState) => ({ cproof: state.cproof }),
     (dispatch: Dispatch<ReduxAction>) => ({actions: new ActionDispatcher(dispatch)})
-)(DeriveTree)
+)(DeriveTreeNode)

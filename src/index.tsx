@@ -5,12 +5,12 @@ import './index.css';
 import App from './App/App';
 import store from './store';
 import * as serviceWorker from './serviceWorker';
-import DeriveTree from './components/DeriveTreeNode/DeriveTreeNodeContainer';
+import DeriveTreeNode from './components/DeriveTreeNode/DeriveTreeNodeContainer';
 
 ReactDOM.render(
     <Provider store={store}>
         <App />
-        <DeriveTree />
+        <DeriveTreeNode />
     </Provider>,
     document.getElementById('root')
 );

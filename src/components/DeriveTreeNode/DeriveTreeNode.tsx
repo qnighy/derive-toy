@@ -9,7 +9,7 @@ interface Props {
     actions: ActionDispatcher;
 }
 
-export class DeriveTree extends React.Component<Props, {}> {
+export class DeriveTreeNode extends React.Component<Props, {}> {
     render() {
         const { cproof, actions } = this.props;
         return <div className="DeriveTree-tree">
@@ -20,7 +20,7 @@ export class DeriveTree extends React.Component<Props, {}> {
                 {
                     cproof.children.map((child) =>
                         <div className="DeriveTree-child">
-                            <DeriveTree cproof={child} actions={actions} />
+                            <DeriveTreeNode cproof={child} actions={actions} />
                         </div>
                     )
                 }
