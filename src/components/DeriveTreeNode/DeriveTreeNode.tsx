@@ -18,8 +18,8 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
             </div>
             <div className="DeriveTreeNode-children">
                 {
-                    cproof.children.map((child) =>
-                        <div className="DeriveTreeNode-child">
+                    cproof.children.map((child, i) =>
+                        <div key={ `childproof${i}` } className="DeriveTreeNode-child">
                             <DeriveTreeNode cproof={child} actions={actions} />
                         </div>
                     )
