@@ -10,7 +10,14 @@ interface Props {
 
 export class DeriveTree extends React.Component<Props, {}> {
     render() {
-        const { cproof } = this.props;
-        return <div><Sequent env={ cproof.env } /></div>;
+        const { cproof, actions } = this.props;
+        return <div>
+            <Sequent env={ cproof.env } />
+            <ul>
+                {
+                    cproof.children.map((child) => <li><DeriveTree cproof={child} actions={actions} /></li>)
+                }
+            </ul>
+        </div>;
     }
 }
