@@ -12,6 +12,7 @@ interface Props {
     cproof: Linear.CheckedProof,
     ui: UiState,
     expand: (path: number[], new_expanded: boolean) => void,
+    close_tree: (path: number[]) => void,
 }
 
 export interface UiState {
@@ -39,9 +40,9 @@ export function reduceExpanded(ui: UiState, path: number[], new_expanded: boolea
 
 export class DeriveTree extends React.Component<Props, {}> {
     render() {
-        const { cproof, ui, expand } = this.props;
+        const { cproof, ui, expand, close_tree } = this.props;
         return <div className="DeriveTree-root">
-            <DeriveTreeNode cproof={cproof} ui={ui.node} path={null} expand={expand} />
+            <DeriveTreeNode cproof={cproof} ui={ui.node} path={null} expand={expand} close_tree={close_tree} />
         </div>;
     }
 }

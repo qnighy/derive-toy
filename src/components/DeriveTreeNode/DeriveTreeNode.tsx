@@ -9,6 +9,7 @@ interface Props {
     ui: UiState,
     path: RevPath | null,
     expand: (path: number[], new_expanded: boolean) => void,
+    close_tree: (path: number[]) => void,
 }
 
 export interface UiState {
@@ -63,6 +64,10 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
         const { ui, path, expand } = this.props;
         expand(pathFromRevPath(path), !ui.expanded);
     }
+    handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        const { path, close_tree } = this.props;
+        close_tree(pathFromRevPath(path));
+    }
     foldable(): boolean {
         const { cproof } = this.props;
         return cproof.children.length > 0;
@@ -72,7 +77,7 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
         return !this.foldable() || ui.expanded;
     }
     render() {
-        const { cproof, ui, path, expand } = this.props;
+        const { cproof, ui, path, expand, close_tree } = this.props;
         const foldableClass = this.foldable() ? "DeriveTreeNode-foldable" : "DeriveTreeNode-nonfoldable";
         const expandClass = this.expanded() ? "DeriveTreeNode-expanded" : "DeriveTreeNode-folded";
         return <div className="DeriveTreeNode-subtree">
@@ -86,7 +91,7 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
                     </button>
                 </span>
                 <span className="DeriveTreeNode-menu-right">
-                    <button className="DeriveTreeNode-button DeriveTreeNode-close-button">
+                    <button className="DeriveTreeNode-button DeriveTreeNode-close-button" onClick={this.handleClose}>
                         <FontAwesomeIcon icon="times-circle" />
                     </button>
                 </span>
@@ -99,7 +104,7 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
                             parent: path,
                         };
                         return <div key={ `childproof${i}` } className="DeriveTreeNode-child">
-                            <DeriveTreeNode cproof={child} ui={ui.children[i]} path={subpath} expand={expand} />
+                            <DeriveTreeNode cproof={child} ui={ui.children[i]} path={subpath} expand={expand} close_tree={close_tree} />
                         </div>;
                     })
                 }

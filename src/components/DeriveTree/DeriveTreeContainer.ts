@@ -12,6 +12,12 @@ export default connect(
                 path,
                 new_expanded,
             })
-        }
+        },
+        close_tree: (path: number[]): void => {
+            dispatch({
+                type: 'CLOSE_TREE',
+                path,
+            })
+        },
     })
 )(DeriveTree)

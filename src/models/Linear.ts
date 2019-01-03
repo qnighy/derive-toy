@@ -757,3 +757,62 @@ export function example(): CheckedProof {
     const env: Environment = Environment.toplevel(prop);
     return check_proof(env, proof);
 }
+
+export function closeTree(tree: Proof, path: number[], path_index: number = 0): Proof {
+    if(path_index >= path.length) {
+        return {
+            kind: "pending",
+        };
+    }
+    const path_comp = path[path_index];
+    switch(tree.kind) {
+        case "axiom":
+        case "pending": {
+            return tree;
+        }
+        case "negation_left":
+        case "negation_right":
+        case "lollipop_right":
+        case "tensor_left":
+        case "par_right":
+        case "with_left":
+        case "plus_right":
+        case "ofcourse_left_multiplex":
+        case "whynot_right_multiplex":
+        case "ofcourse_left_dereliction":
+        case "whynot_right_dereliction":
+        case "ofcourse_right":
+        case "whynot_left": {
+            if(path_comp >= 1) {
+                return tree;
+            }
+            let new_tree = Object.assign({}, tree);
+            new_tree.child = closeTree(new_tree.child, path, path_index + 1);
+            return new_tree;
+        }
+        case "lollipop_left": {
+            if(path_comp >= 2) {
+                return tree;
+            }
+            let new_tree = Object.assign({}, tree);
+            if(path_comp === 0) {
+                new_tree.child_left = closeTree(new_tree.child_left, path, path_index + 1);
+            } else {
+                new_tree.child_right = closeTree(new_tree.child_right, path, path_index + 1);
+            }
+            return new_tree;
+        }
+        case "tensor_right":
+        case "par_left":
+        case "with_right":
+        case "plus_left": {
+            if(path_comp >= tree.children.length) {
+                return tree;
+            }
+            let new_tree = Object.assign({}, tree);
+            new_tree.children = Array.from(new_tree.children);
+            new_tree.children[path_comp] = closeTree(new_tree.children[path_comp], path, path_index + 1);
+            return new_tree;
+        }
+    }
+}

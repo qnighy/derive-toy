@@ -7,12 +7,17 @@ export type ReduxState = {
     ui: UiState,
 }
 
-export type ReduxAction = ExpandAction // | SomeAction
+export type ReduxAction = ExpandAction | CloseAction
 
 interface ExpandAction {
     type: 'EXPAND_TREE';
     path: number[];
     new_expanded: boolean;
+}
+
+interface CloseAction {
+    type: 'CLOSE_TREE';
+    path: number[];
 }
 
 const initialState: ReduxState = {
@@ -26,6 +31,15 @@ function reduce(state: ReduxState = initialState, action: ReduxAction): ReduxSta
             let new_state: ReduxState = Object.assign({}, state);
             new_state.ui = reduceExpanded(new_state.ui, action.path, action.new_expanded);
             return new_state;
+        }
+        case 'CLOSE_TREE': {
+            const new_tree = Linear.closeTree(state.cproof.proof, action.path);
+            const new_cproof = Linear.check_proof(state.cproof.env, new_tree);
+            const new_ui = updateUiStateFromProof(new_cproof, state.ui);
+            return {
+                cproof: new_cproof,
+                ui: new_ui,
+            };
         }
     }
     return state;
