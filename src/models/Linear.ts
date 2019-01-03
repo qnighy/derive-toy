@@ -938,6 +938,14 @@ function actOnPropositionInner(
                 else throw e;
             }
             if(!unify_success) return cproof.proof;
+            let has_full_usage: boolean = false;
+            // for(let [index, entry] of cproof.env.props) {
+            for(let [eindex, entry] of Array.from(cproof.env.props)) {
+                if(eindex !== index && eindex !== pairing_index && entry.usage === "full") {
+                    has_full_usage = true;
+                }
+            }
+            if(has_full_usage) return cproof.proof;
             if(entry.direction === "left" && pairing_entry.direction === "right") {
                 return { kind: "axiom", left_index: index, right_index: pairing_index };
             } else if(entry.direction === "right" && pairing_entry.direction === "left") {
