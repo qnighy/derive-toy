@@ -48,6 +48,10 @@ button.DeriveTreeNode-button {
 	outline: inherit;
 }
 
+button.DeriveTreeNode-expand-button.DeriveTreeNode-nonfoldable {
+    display: none;
+}
+
 .DeriveTreeNode-children {
     grid-area: "children";
 
@@ -65,4 +69,13 @@ button.DeriveTreeNode-button {
 .DeriveTreeNode-child {
     padding-right: 10px;
     padding-left: 10px;
+}
+
+.DeriveTreeNode-fold-placeholder {
+    grid-area: "children";
+    text-align: center;
+}
+
+.DeriveTreeNode-fold-placeholder.DeriveTreeNode-expanded {
+    display: none;
 }

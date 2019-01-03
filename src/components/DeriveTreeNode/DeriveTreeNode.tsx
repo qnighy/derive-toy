@@ -63,16 +63,25 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
         const { ui, path, expand } = this.props;
         expand(pathFromRevPath(path), !ui.expanded);
     }
+    foldable(): boolean {
+        const { cproof } = this.props;
+        return cproof.children.length > 0;
+    }
+    expanded(): boolean {
+        const { ui } = this.props;
+        return !this.foldable() || ui.expanded;
+    }
     render() {
         const { cproof, ui, path, expand } = this.props;
-        const expandClass = ui.expanded ? "DeriveTreeNode-expanded" : "DeriveTreeNode-folded";
+        const foldableClass = this.foldable() ? "DeriveTreeNode-foldable" : "DeriveTreeNode-nonfoldable";
+        const expandClass = this.expanded() ? "DeriveTreeNode-expanded" : "DeriveTreeNode-folded";
         return <div className="DeriveTreeNode-subtree">
             <div className="DeriveTreeNode-node">
                 <div className="DeriveTreeNode-sequent">
                     <Sequent env={ cproof.env } />
                 </div>
                 <span className="DeriveTreeNode-menu-left">
-                    <button className="DeriveTreeNode-button DeriveTreeNode-expand-button" onClick={this.handleToggle}>
+                    <button className={`DeriveTreeNode-button DeriveTreeNode-expand-button ${foldableClass}`} onClick={this.handleToggle}>
                         <FontAwesomeIcon icon={ ui.expanded ? "minus-square" : "plus-square" } />
                     </button>
                 </span>
@@ -94,6 +103,9 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
                         </div>;
                     })
                 }
+            </div>
+            <div className={`DeriveTreeNode-fold-placeholder ${expandClass}`}>
+                ⋮
             </div>
         </div>;
     }
