@@ -1,11 +1,11 @@
-import { pp_prop, Propositions, Proof, check_proof, Environment } from "./Linear";
+import {Propositions, Pretty, Proof, check_proof, Environment } from "./Linear";
 
 it('pretty prints tensor', () => {
-    expect(pp_prop(Propositions.newTensor([Propositions.newAtomic("A"), Propositions.newAtomic("B")]))).toBe("A ⊗ B")
+    expect(Pretty.pp_prop(Propositions.newTensor([Propositions.newAtomic("A"), Propositions.newAtomic("B")]))).toBe("A ⊗ B")
 })
 
 it('pretty prints one', () => {
-    expect(pp_prop(Propositions.newTensor([]))).toBe("1")
+    expect(Pretty.pp_prop(Propositions.newTensor([]))).toBe("1")
 })
 
 it('checks proof', () => {
