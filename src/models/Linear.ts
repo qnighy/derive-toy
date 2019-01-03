@@ -305,7 +305,7 @@ export class Environment {
         }
         return prop.usage;
     }
-    replace_prop(old_index: string, branches: [number, Proposition, boolean][], partialize: boolean): Environment {
+    replace_prop(old_index: string, branches: ReadonlyArray<Readonly<[number, Proposition, boolean]>>, partialize: boolean): Environment {
         const old_prop = this.props.get(old_index);
         if(old_prop === undefined) {
             throw new ProofCheckException(`proposition not found: ${old_index}`);
@@ -396,7 +396,7 @@ function unify_usage(usage1: Usage, usage2: Usage): Usage {
     return usage1;
 }
 
-function usage_sum(usages: Usage[]): Usage {
+function usage_sum(usages: ReadonlyArray<Usage>): Usage {
     let full_found = false;
     let partial_found = false;
     for(let usage of usages) {
@@ -432,7 +432,7 @@ export class CheckedProof {
     constructor(
         public readonly env: Environment,
         public readonly proof: Proof,
-        public readonly children: CheckedProof[],
+        public readonly children: ReadonlyArray<CheckedProof>,
     ) { }
 
     actionable_on(index: string): Actionability {
@@ -788,7 +788,7 @@ export function example(): CheckedProof {
     return check_proof(env, proof);
 }
 
-export function closeTree(tree: Proof, path: number[], path_index: number = 0): Proof {
+export function closeTree(tree: Proof, path: ReadonlyArray<number>, path_index: number = 0): Proof {
     if(path_index >= path.length) {
         return {
             kind: "pending",
@@ -856,7 +856,7 @@ export function closeTree(tree: Proof, path: number[], path_index: number = 0): 
 }
 
 export function actOnProposition(
-    cproof: CheckedProof, path: number[], index: string,
+    cproof: CheckedProof, path: ReadonlyArray<number>, index: string,
     pairing_index: string | null,
     option: number | undefined, path_index: number = 0): Proof {
     if(path_index >= path.length) {

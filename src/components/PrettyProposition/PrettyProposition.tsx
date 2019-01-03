@@ -2,10 +2,10 @@ import * as React from "react";
 import * as Linear from "../../models/Linear";
 
 interface Props {
-    proposition: Linear.Proposition,
-    level?: Level,
-    strict?: boolean,
-    each_action?: (i: number) => void,
+    readonly proposition: Linear.Proposition,
+    readonly level?: Level,
+    readonly strict?: boolean,
+    readonly each_action?: (i: number) => void,
 }
 
 type Level = "atomic" | "negation" | "modal" | "multiplicative" | "additive" | "implicational";
@@ -14,9 +14,7 @@ let level_max: Level = "implicational";
 
 export class PrettyProposition extends React.Component<Props, {}> {
     render() {
-        const { proposition: p, level: level_, strict: strict_, each_action } = this.props;
-        const level: Level = level_ || level_max;
-        const strict: boolean = strict_ === undefined ? false : strict_;
+        const { proposition: p, level = level_max, strict = false, each_action } = this.props;
 
         const actionableClass = each_action !== undefined ? "PrettyProposition-actionable" : "PrettyProposition-inactionable";
 

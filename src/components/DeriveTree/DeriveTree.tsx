@@ -10,18 +10,18 @@ import {
 import { PropositionPath } from "../Sequent/Sequent";
 
 interface Props {
-    cproof: Linear.CheckedProof,
-    ui: UiState,
-    expand: (path: number[], new_expanded: boolean) => void,
-    close_tree: (path: number[]) => void,
-    hover: (path: PropositionPath | null) => void,
-    act_on_proposition: (path: PropositionPath, paired: boolean, option: number | undefined) => void,
+    readonly cproof: Linear.CheckedProof,
+    readonly ui: UiState,
+    readonly expand: (path: ReadonlyArray<number>, new_expanded: boolean) => void,
+    readonly close_tree: (path: ReadonlyArray<number>) => void,
+    readonly hover: (path: PropositionPath | null) => void,
+    readonly act_on_proposition: (path: PropositionPath, paired: boolean, option: number | undefined) => void,
 }
 
 export interface UiState {
-    node: NodeUiState;
-    hover_on: PropositionPath | null,
-    pairing_with: PropositionPath | null;
+    readonly node: NodeUiState;
+    readonly hover_on: PropositionPath | null,
+    readonly pairing_with: PropositionPath | null;
 }
 
 export function updateUiStateFromProof(cproof: Linear.CheckedProof, state?: UiState | undefined): UiState {
@@ -40,7 +40,7 @@ export function updateUiStateFromProof(cproof: Linear.CheckedProof, state?: UiSt
     }
 }
 
-export function reduceExpanded(ui: UiState, path: number[], new_expanded: boolean): UiState {
+export function reduceExpanded(ui: UiState, path: ReadonlyArray<number>, new_expanded: boolean): UiState {
     const new_node = reduceNodeExpanded(ui.node, path, 0, new_expanded);
     return {
         node: new_node,

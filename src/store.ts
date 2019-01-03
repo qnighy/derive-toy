@@ -2,39 +2,40 @@ import {createStore, combineReducers, Action} from 'redux'
 import * as Linear from './models/Linear';
 import { UiState, updateUiStateFromProof, reduceExpanded } from './components/DeriveTree/DeriveTree';
 import { PropositionPath } from './components/Sequent/Sequent';
+import { stat } from 'fs';
 
 export type ReduxState = {
-    cproof: Linear.CheckedProof,
-    ui: UiState,
+    readonly cproof: Linear.CheckedProof,
+    readonly ui: UiState,
 }
 
 export type ReduxAction = DummyActionType | ExpandAction | CloseAction | HoverAction | PropositionAction
 
 interface DummyActionType {
-    type: '__DUMMY_ACTION__';
+    readonly type: '__DUMMY_ACTION__';
 }
 
 interface ExpandAction {
-    type: 'EXPAND_TREE';
-    path: number[];
-    new_expanded: boolean;
+    readonly type: 'EXPAND_TREE';
+    readonly path: ReadonlyArray<number>;
+    readonly new_expanded: boolean;
 }
 
 interface CloseAction {
-    type: 'CLOSE_TREE';
-    path: number[];
+    readonly type: 'CLOSE_TREE';
+    readonly path: ReadonlyArray<number>;
 }
 
 interface HoverAction {
-    type: 'HOVER';
-    path: PropositionPath | null;
+    readonly type: 'HOVER';
+    readonly path: PropositionPath | null;
 }
 
 interface PropositionAction {
-    type: 'PROPOSITION';
-    paired: boolean;
-    path: PropositionPath;
-    option?: number;
+    readonly type: 'PROPOSITION';
+    readonly paired: boolean;
+    readonly path: PropositionPath;
+    readonly option?: number;
 }
 
 const initialState: ReduxState = {
@@ -45,9 +46,10 @@ const initialState: ReduxState = {
 function reduce(state: ReduxState = initialState, action: ReduxAction): ReduxState {
     switch(action.type) {
         case 'EXPAND_TREE': {
-            let new_state: ReduxState = Object.assign({}, state);
-            new_state.ui = reduceExpanded(new_state.ui, action.path, action.new_expanded);
-            return new_state;
+            return {
+                ...state,
+                ui: reduceExpanded(state.ui, action.path, action.new_expanded),
+            };
         }
         case 'CLOSE_TREE': {
             const new_tree = Linear.closeTree(state.cproof.proof, action.path);
@@ -59,25 +61,34 @@ function reduce(state: ReduxState = initialState, action: ReduxAction): ReduxSta
             };
         }
         case 'HOVER': {
-            let new_state: ReduxState = Object.assign({}, state);
-            new_state.ui = Object.assign({}, new_state.ui);
-            new_state.ui.hover_on = action.path;
-            return new_state;
+            return {
+                ...state,
+                ui: {
+                    ...state.ui,
+                    hover_on: action.path,
+                }
+            };
         }
         case 'PROPOSITION': {
             let pairing_index: string | null = null;
             if(action.paired) {
                 if(state.ui.pairing_with === null) {
-                    let new_state: ReduxState = Object.assign({}, state);
-                    new_state.ui = Object.assign({}, new_state.ui);
-                    new_state.ui.pairing_with = action.path;
-                    return new_state;
+                    return {
+                        ...state,
+                        ui: {
+                            ...state.ui,
+                            pairing_with: action.path,
+                        }
+                    }
                 }
                 if(!action.path.equal_path(state.ui.pairing_with.path)) {
-                    let new_state: ReduxState = Object.assign({}, state);
-                    new_state.ui = Object.assign({}, new_state.ui);
-                    new_state.ui.pairing_with = null;
-                    return new_state;
+                    return {
+                        ...state,
+                        ui: {
+                            ...state.ui,
+                            pairing_with: null,
+                        }
+                    }
                 }
                 pairing_index = state.ui.pairing_with.index;
             }

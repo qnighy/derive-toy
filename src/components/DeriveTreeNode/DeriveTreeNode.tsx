@@ -5,20 +5,20 @@ import { Sequent, PropositionPath } from "../Sequent/Sequent";
 import './DeriveTreeNode.css';
 
 interface Props {
-    cproof: Linear.CheckedProof,
-    ui: UiState,
-    path: number[],
-    hover_on: PropositionPath | null,
-    pairing_with: PropositionPath | null;
-    expand: (path: number[], new_expanded: boolean) => void,
-    close_tree: (path: number[]) => void,
-    hover: (path: PropositionPath | null) => void,
-    act_on_proposition: (path: PropositionPath, paired: boolean, option: number | undefined) => void,
+    readonly cproof: Linear.CheckedProof,
+    readonly ui: UiState,
+    readonly path: ReadonlyArray<number>,
+    readonly hover_on: PropositionPath | null,
+    readonly pairing_with: PropositionPath | null;
+    readonly expand: (path: ReadonlyArray<number>, new_expanded: boolean) => void,
+    readonly close_tree: (path: ReadonlyArray<number>) => void,
+    readonly hover: (path: PropositionPath | null) => void,
+    readonly act_on_proposition: (path: PropositionPath, paired: boolean, option: number | undefined) => void,
 }
 
 export interface UiState {
-    expanded: boolean;
-    children: UiState[];
+    readonly expanded: boolean;
+    readonly children: ReadonlyArray<UiState>;
 }
 
 export function updateUiStateFromProof(cproof: Linear.CheckedProof, state?: UiState | undefined): UiState {
@@ -35,18 +35,23 @@ export function updateUiStateFromProof(cproof: Linear.CheckedProof, state?: UiSt
     }
 }
 
-export function reduceExpanded(ui: UiState, path: number[], path_index: number, new_expanded: boolean): UiState {
-    let new_ui: UiState = Object.assign({}, ui);
+export function reduceExpanded(ui: UiState, path: ReadonlyArray<number>, path_index: number, new_expanded: boolean): UiState {
     if(path_index >= path.length) {
-        new_ui.expanded = new_expanded;
-        return new_ui;
+        return {
+            ...ui,
+            expanded: new_expanded,
+        };
     }
     let path_comp = path[path_index];
-    if(path_comp < new_ui.children.length) {
-        new_ui.children = Array.from(new_ui.children);
-        new_ui.children[path_comp] = reduceExpanded(new_ui.children[path_comp], path, path_index + 1, new_expanded);
+    if(path_comp < ui.children.length) {
+        const new_children = Array.from(ui.children);
+        new_children[path_comp] = reduceExpanded(new_children[path_comp], path, path_index + 1, new_expanded);
+        return {
+            ...ui,
+            children: new_children,
+        };
     }
-    return new_ui;
+    return ui;
 }
 
 export class DeriveTreeNode extends React.Component<Props, {}> {

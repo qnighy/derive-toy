@@ -4,30 +4,30 @@ import { PrettyProposition } from "../PrettyProposition/PrettyProposition";
 import './Sequent.css'
 
 interface Props {
-    cproof: Linear.CheckedProof;
-    path: number[];
-    hover_on: PropositionPath | null;
-    pairing_with: PropositionPath | null;
-    hover: (path: PropositionPath | null) => void,
-    act_on_proposition: (path: PropositionPath, paired: boolean, option: number | undefined) => void,
+    readonly cproof: Linear.CheckedProof;
+    readonly path: ReadonlyArray<number>;
+    readonly hover_on: PropositionPath | null;
+    readonly pairing_with: PropositionPath | null;
+    readonly hover: (path: PropositionPath | null) => void,
+    readonly act_on_proposition: (path: PropositionPath, paired: boolean, option: number | undefined) => void,
 }
 
 export class PropositionPath {
-    constructor(public readonly path: number[], public readonly index: string) {}
-    equal_path(path: number[]): boolean {
+    constructor(public readonly path: ReadonlyArray<number>, public readonly index: string) {}
+    equal_path(path: ReadonlyArray<number>): boolean {
         if(path.length !== this.path.length) return false;
         for(let i = 0; i < path.length; i++) {
             if(path[i] !== this.path[i]) return false;
         }
         return true;
     }
-    is_parent(path: number[], index: string): boolean {
+    is_parent(path: ReadonlyArray<number>, index: string): boolean {
         for(let i = 0; i < path.length; i++) {
             if(path[i] !== this.path[i]) return false;
         }
         return `${this.index}.`.startsWith(`${index}.`);
     }
-    is_exact(path: number[], index: string): boolean {
+    is_exact(path: ReadonlyArray<number>, index: string): boolean {
         if(path.length !== this.path.length) return false;
         for(let i = 0; i < path.length; i++) {
             if(path[i] !== this.path[i]) return false;
