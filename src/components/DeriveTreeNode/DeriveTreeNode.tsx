@@ -7,7 +7,7 @@ import './DeriveTreeNode.css';
 interface Props {
     cproof: Linear.CheckedProof,
     ui: UiState,
-    path: RevPath | null,
+    path: number[],
     expand: (path: number[], new_expanded: boolean) => void,
     close_tree: (path: number[]) => void,
 }
@@ -45,28 +45,14 @@ export function reduceExpanded(ui: UiState, path: number[], path_index: number, 
     return new_ui;
 }
 
-interface RevPath {
-    index: number;
-    parent: RevPath | null;
-};
-
-function pathFromRevPath(path: RevPath | null): number[] {
-    let ret: number[] = [];
-    while(path !== null) {
-        ret.unshift(path.index);
-        path = path.parent;
-    }
-    return ret;
-}
-
 export class DeriveTreeNode extends React.Component<Props, {}> {
     handleToggle = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         const { ui, path, expand } = this.props;
-        expand(pathFromRevPath(path), !ui.expanded);
+        expand(path, !ui.expanded);
     }
     handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         const { path, close_tree } = this.props;
-        close_tree(pathFromRevPath(path));
+        close_tree(path);
     }
     foldable(): boolean {
         const { cproof } = this.props;
@@ -100,10 +86,8 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
             <div className={`DeriveTreeNode-children ${expandClass}`}>
                 {
                     cproof.children.map((child, i) => {
-                        const subpath = {
-                            index: i,
-                            parent: path,
-                        };
+                        let subpath = Array.from(path);
+                        subpath.push(i);
                         return <div key={ `childproof${i}` } className="DeriveTreeNode-child">
                             <DeriveTreeNode cproof={child} ui={ui.children[i]} path={subpath} expand={expand} close_tree={close_tree} />
                         </div>;

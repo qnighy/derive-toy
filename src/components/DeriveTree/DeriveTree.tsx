@@ -42,7 +42,7 @@ export class DeriveTree extends React.Component<Props, {}> {
     render() {
         const { cproof, ui, expand, close_tree } = this.props;
         return <div className="DeriveTree-root">
-            <DeriveTreeNode cproof={cproof} ui={ui.node} path={null} expand={expand} close_tree={close_tree} />
+            <DeriveTreeNode cproof={cproof} ui={ui.node} path={[]} expand={expand} close_tree={close_tree} />
         </div>;
     }
 }
