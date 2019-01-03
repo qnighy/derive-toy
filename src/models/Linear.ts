@@ -650,7 +650,7 @@ function check_proof_phase2(cproof: CheckedProof, parent_env: Environment | null
                             subprops_.set(index, {
                                 prop: subprop.prop,
                                 direction: subprop.direction,
-                                usage: "full",
+                                usage: "none",
                             });
                         }
                     }
