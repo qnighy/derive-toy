@@ -1,47 +1,47 @@
 export interface Atomic {
-    kind: "atomic";
-    name: string;
+    readonly kind: "atomic";
+    readonly name: string;
 }
 
 export interface Negation {
-    kind: "negation";
-    child: Proposition;
+    readonly kind: "negation";
+    readonly child: Proposition;
 }
 
 export interface Lollipop {
-    kind: "lollipop";
-    assumption: Proposition;
-    consequence: Proposition;
+    readonly kind: "lollipop";
+    readonly assumption: Proposition;
+    readonly consequence: Proposition;
 }
 
 export interface Tensor {
-    kind: "tensor";
-    children: Proposition[];
+    readonly kind: "tensor";
+    readonly children: ReadonlyArray<Proposition>;
 }
 
 export interface Par {
-    kind: "par";
-    children: Proposition[];
+    readonly kind: "par";
+    readonly children: ReadonlyArray<Proposition>;
 }
 
 export interface With {
-    kind: "with";
-    children: Proposition[];
+    readonly kind: "with";
+    readonly children: ReadonlyArray<Proposition>;
 }
 
 export interface Plus {
-    kind: "plus";
-    children: Proposition[];
+    readonly kind: "plus";
+    readonly children: ReadonlyArray<Proposition>;
 }
 
 export interface OfCourse {
-    kind: "ofcourse";
-    child: Proposition;
+    readonly kind: "ofcourse";
+    readonly child: Proposition;
 }
 
 export interface WhyNot {
-    kind: "whynot";
-    child: Proposition;
+    readonly kind: "whynot";
+    readonly child: Proposition;
 }
 
 export type Proposition = Atomic | Negation | Lollipop | Tensor | Par | With | Plus | OfCourse | WhyNot;
@@ -58,19 +58,19 @@ export function newLollipop(assumption: Proposition, consequence: Proposition): 
     return { kind: "lollipop", assumption, consequence }
 }
 
-export function newTensor(children: Proposition[]): Tensor {
+export function newTensor(children: ReadonlyArray<Proposition>): Tensor {
     return { kind: "tensor", children }
 }
 
-export function newPar(children: Proposition[]): Par {
+export function newPar(children: ReadonlyArray<Proposition>): Par {
     return { kind: "par", children }
 }
 
-export function newWith(children: Proposition[]): With {
+export function newWith(children: ReadonlyArray<Proposition>): With {
     return { kind: "with", children }
 }
 
-export function newPlus(children: Proposition[]): Plus {
+export function newPlus(children: ReadonlyArray<Proposition>): Plus {
     return { kind: "plus", children }
 }
 
@@ -156,126 +156,126 @@ function prop_level(p: Proposition): number {
 }
 
 export interface Axiom {
-    kind: "axiom";
-    left_index: string;
-    right_index: string;
+    readonly kind: "axiom";
+    readonly left_index: string;
+    readonly right_index: string;
 }
 
 export interface NegationLeft {
-    kind: "negation_left";
-    index: string;
-    child: Proof;
+    readonly kind: "negation_left";
+    readonly index: string;
+    readonly child: Proof;
 }
 
 export interface NegationRight {
-    kind: "negation_right";
-    index: string;
-    child: Proof;
+    readonly kind: "negation_right";
+    readonly index: string;
+    readonly child: Proof;
 }
 
 export interface LollipopLeft {
-    kind: "lollipop_left";
-    index: string;
-    child_left: Proof;
-    child_right: Proof;
+    readonly kind: "lollipop_left";
+    readonly index: string;
+    readonly child_left: Proof;
+    readonly child_right: Proof;
 }
 
 export interface LollipopRight {
-    kind: "lollipop_right";
-    index: string;
-    child: Proof;
+    readonly kind: "lollipop_right";
+    readonly index: string;
+    readonly child: Proof;
 }
 
 export interface TensorLeft {
-    kind: "tensor_left";
-    index: string;
-    child: Proof;
+    readonly kind: "tensor_left";
+    readonly index: string;
+    readonly child: Proof;
 }
 
 export interface TensorRight {
-    kind: "tensor_right";
-    index: string;
-    children: Proof[];
+    readonly kind: "tensor_right";
+    readonly index: string;
+    readonly children: ReadonlyArray<Proof>;
 }
 
 export interface ParLeft {
-    kind: "par_left";
-    index: string;
-    children: Proof[];
+    readonly kind: "par_left";
+    readonly index: string;
+    readonly children: ReadonlyArray<Proof>;
 }
 
 export interface ParRight {
-    kind: "par_right";
-    index: string;
-    child: Proof;
+    readonly kind: "par_right";
+    readonly index: string;
+    readonly child: Proof;
 }
 
 export interface WithLeft {
-    kind: "with_left";
-    index: string;
-    option_index: number;
-    child: Proof;
+    readonly kind: "with_left";
+    readonly index: string;
+    readonly option_index: number;
+    readonly child: Proof;
 }
 
 export interface WithRight {
-    kind: "with_right";
-    index: string;
-    children: Proof[];
+    readonly kind: "with_right";
+    readonly index: string;
+    readonly children: ReadonlyArray<Proof>;
 }
 
 export interface PlusLeft {
-    kind: "plus_left";
-    index: string;
-    children: Proof[];
+    readonly kind: "plus_left";
+    readonly index: string;
+    readonly children: ReadonlyArray<Proof>;
 }
 
 export interface PlusRight {
-    kind: "plus_right";
-    index: string;
-    option_index: number;
-    child: Proof;
+    readonly kind: "plus_right";
+    readonly index: string;
+    readonly option_index: number;
+    readonly child: Proof;
 }
 
 export interface OfCourseLeftMultiplex {
-    kind: "ofcourse_left_multiplex";
-    index: string;
-    factor: number;
-    child: Proof;
+    readonly kind: "ofcourse_left_multiplex";
+    readonly index: string;
+    readonly factor: number;
+    readonly child: Proof;
 }
 
 export interface OfCourseLeftDereliction {
-    kind: "ofcourse_left_dereliction";
-    index: string;
-    child: Proof;
+    readonly kind: "ofcourse_left_dereliction";
+    readonly index: string;
+    readonly child: Proof;
 }
 
 export interface OfCourseRight {
-    kind: "ofcourse_right";
-    index: string;
-    child: Proof;
+    readonly kind: "ofcourse_right";
+    readonly index: string;
+    readonly child: Proof;
 }
 
 export interface WhyNotLeft {
-    kind: "whynot_left";
-    index: string;
-    child: Proof;
+    readonly kind: "whynot_left";
+    readonly index: string;
+    readonly child: Proof;
 }
 
 export interface WhyNotRightMultiplex {
-    kind: "whynot_right_multiplex";
-    index: string;
-    factor: number;
-    child: Proof;
+    readonly kind: "whynot_right_multiplex";
+    readonly index: string;
+    readonly factor: number;
+    readonly child: Proof;
 }
 
 export interface WhyNotRightDereliction {
-    kind: "whynot_right_dereliction";
-    index: string;
-    child: Proof;
+    readonly kind: "whynot_right_dereliction";
+    readonly index: string;
+    readonly child: Proof;
 }
 
 export interface Pending {
-    kind: "pending";
+    readonly kind: "pending";
 }
 
 export type Proof =
@@ -287,10 +287,7 @@ export type Proof =
     | Pending
 
 export class Environment {
-    props: Map<string, PropositionEntry>;
-    constructor(props: Map<string, PropositionEntry>) {
-        this.props = props;
-    }
+    constructor(public readonly props: ReadonlyMap<string, PropositionEntry>) {}
     get_prop(index: string, direction: Direction): Proposition {
         const prop = this.props.get(index);
         if(prop === undefined) {
@@ -381,14 +378,11 @@ export class Environment {
 }
 
 export class PropositionEntry {
-    prop: Proposition;
-    direction: Direction;
-    usage: Usage;
-    constructor(prop: Proposition, direction: Direction, usage: Usage | undefined) {
-        this.prop = prop;
-        this.direction = direction;
-        this.usage = usage === undefined ? "partial" : usage;
-    }
+    constructor(
+        public readonly prop: Proposition,
+        public readonly direction: Direction,
+        public readonly usage: Usage = "partial",
+    ) {}
 }
 
 export type Direction = "left" | "right";
@@ -822,9 +816,10 @@ export function closeTree(tree: Proof, path: number[], path_index: number = 0): 
             if(path_comp >= 1) {
                 return tree;
             }
-            let new_tree = Object.assign({}, tree);
-            new_tree.child = closeTree(new_tree.child, path, path_index + 1);
-            return new_tree;
+            return {
+                ...tree,
+                child: closeTree(tree.child, path, path_index + 1),
+            };
         }
         case "lollipop_left": {
             if(path_comp >= 2) {
@@ -832,11 +827,16 @@ export function closeTree(tree: Proof, path: number[], path_index: number = 0): 
             }
             let new_tree = Object.assign({}, tree);
             if(path_comp === 0) {
-                new_tree.child_left = closeTree(new_tree.child_left, path, path_index + 1);
+                return {
+                    ...tree,
+                    child_left: closeTree(new_tree.child_left, path, path_index + 1),
+                }
             } else {
-                new_tree.child_right = closeTree(new_tree.child_right, path, path_index + 1);
+                return {
+                    ...tree,
+                    child_right: closeTree(new_tree.child_right, path, path_index + 1),
+                }
             }
-            return new_tree;
         }
         case "tensor_right":
         case "par_left":
@@ -845,10 +845,12 @@ export function closeTree(tree: Proof, path: number[], path_index: number = 0): 
             if(path_comp >= tree.children.length) {
                 return tree;
             }
-            let new_tree = Object.assign({}, tree);
-            new_tree.children = Array.from(new_tree.children);
-            new_tree.children[path_comp] = closeTree(new_tree.children[path_comp], path, path_index + 1);
-            return new_tree;
+            const new_children = Array.from(tree.children);
+            new_children[path_comp] = closeTree(tree.children[path_comp], path, path_index + 1);
+            return {
+                ...tree,
+                children: new_children,
+            }
         }
     }
 }
@@ -887,9 +889,10 @@ export function actOnProposition(
             if(path_comp >= 1) {
                 return tree;
             }
-            let new_tree = Object.assign({}, tree);
-            new_tree.child = actOnProposition(subproof, path, index, pairing_index, option, path_index + 1);
-            return new_tree;
+            return {
+                ...tree,
+                child: actOnProposition(subproof, path, index, pairing_index, option, path_index + 1),
+            }
         }
         case "lollipop_left": {
             if(path_comp >= 2) {
@@ -897,11 +900,16 @@ export function actOnProposition(
             }
             let new_tree = Object.assign({}, tree);
             if(path_comp === 0) {
-                new_tree.child_left = actOnProposition(subproof, path, index, pairing_index, option, path_index + 1);
+                return {
+                    ...tree,
+                    child_left: actOnProposition(subproof, path, index, pairing_index, option, path_index + 1),
+                }
             } else {
-                new_tree.child_right = actOnProposition(subproof, path, index, pairing_index, option, path_index + 1);
+                return {
+                    ...tree,
+                    child_right: actOnProposition(subproof, path, index, pairing_index, option, path_index + 1),
+                }
             }
-            return new_tree;
         }
         case "tensor_right":
         case "par_left":
@@ -910,10 +918,12 @@ export function actOnProposition(
             if(path_comp >= tree.children.length) {
                 return tree;
             }
-            let new_tree = Object.assign({}, tree);
-            new_tree.children = Array.from(new_tree.children);
-            new_tree.children[path_comp] = actOnProposition(subproof, path, index, pairing_index, option, path_index + 1);
-            return new_tree;
+            const new_children = Array.from(tree.children);
+            new_children[path_comp] = actOnProposition(subproof, path, index, pairing_index, option, path_index + 1);
+            return {
+                ...tree,
+                children: new_children,
+            };
         }
     }
 }
