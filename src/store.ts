@@ -8,7 +8,11 @@ export type ReduxState = {
     ui: UiState,
 }
 
-export type ReduxAction = ExpandAction | CloseAction | HoverAction
+export type ReduxAction = DummyActionType | ExpandAction | CloseAction | HoverAction
+
+interface DummyActionType {
+    type: '__DUMMY_ACTION__';
+}
 
 interface ExpandAction {
     type: 'EXPAND_TREE';
