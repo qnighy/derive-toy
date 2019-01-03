@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Linear from "../../models/Linear";
 import { PrettyProposition } from "../PrettyProposition/PrettyProposition";
+import './Sequent.css'
 
 interface Props {
     env: Linear.Environment;
@@ -22,20 +23,26 @@ export class Sequent extends React.Component<Props, {}> {
         });
         const props = indices.map((index): [string, Linear.PropositionEntry] =>
             [index, env.props.get(index) as Linear.PropositionEntry]);
-        const left_props = props.filter(([index, entry]) => entry.direction === "left").map(([index, entry]): [string, Linear.Proposition] => [index, entry.prop]);
-        const right_props = props.filter(([index, entry]) => entry.direction === "right").map(([index, entry]): [string, Linear.Proposition] => [index, entry.prop]);
+        const left_props = props.filter(([index, entry]) => entry.direction === "left");
+        const right_props = props.filter(([index, entry]) => entry.direction === "right");
         return (
             <span>
                 {
                     join_elements(
-                        left_props.map(([index, prop]) => <PrettyProposition key={index} proposition={prop} />),
+                        left_props.map(([index, prop]) => {
+                            const usageClass = `Sequent-usage-${prop.usage}`;
+                            return <span key={index} className={`${usageClass}`}><PrettyProposition proposition={prop.prop} /></span>;
+                        }),
                         ", "
                     )
                 }
                 { " ⊢ " }
                 {
                     join_elements(
-                        right_props.map(([index, prop]) => <PrettyProposition key={index} proposition={prop} />),
+                        right_props.map(([index, prop]) => {
+                            const usageClass = `Sequent-usage-${prop.usage}`;
+                            return <span key={index} className={`${usageClass}`}><PrettyProposition proposition={prop.prop} /></span>;
+                        }),
                         ", "
                     )
                 }

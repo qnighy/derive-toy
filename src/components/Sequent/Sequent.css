@@ -1,0 +1,11 @@
+.Sequent-usage-full {
+    color: black;
+}
+
+.Sequent-usage-partial {
+    color: gray;
+}
+
+.Sequent-usage-none {
+    color: #ddd;
+}
