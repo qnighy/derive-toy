@@ -8,7 +8,7 @@ export type ReduxState = {
     ui: UiState,
 }
 
-export type ReduxAction = DummyActionType | ExpandAction | CloseAction | HoverAction
+export type ReduxAction = DummyActionType | ExpandAction | CloseAction | HoverAction | PropositionAction
 
 interface DummyActionType {
     type: '__DUMMY_ACTION__';
@@ -28,6 +28,13 @@ interface CloseAction {
 interface HoverAction {
     type: 'HOVER';
     path: PropositionPath | null;
+}
+
+interface PropositionAction {
+    type: 'PROPOSITION';
+    paired: boolean;
+    path: PropositionPath;
+    option?: number;
 }
 
 const initialState: ReduxState = {
@@ -56,6 +63,16 @@ function reduce(state: ReduxState = initialState, action: ReduxAction): ReduxSta
             new_state.ui = Object.assign({}, new_state.ui);
             new_state.ui.hover_on = action.path;
             return new_state;
+        }
+        case 'PROPOSITION': {
+            // TODO: paired case
+            const new_tree = Linear.actOnProposition(state.cproof, action.path.path, action.path.index, action.option);
+            const new_cproof = Linear.check_proof(state.cproof.env, new_tree);
+            const new_ui = updateUiStateFromProof(new_cproof, state.ui);
+            return {
+                cproof: new_cproof,
+                ui: new_ui,
+            };
         }
     }
     return state;

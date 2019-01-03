@@ -852,3 +852,130 @@ export function closeTree(tree: Proof, path: number[], path_index: number = 0): 
         }
     }
 }
+
+export function actOnProposition(
+    cproof: CheckedProof, path: number[], index: string,
+    option: number | undefined, path_index: number = 0): Proof {
+    if(path_index >= path.length) {
+        return actOnPropositionInner(cproof, index, option);
+    }
+    const path_comp = path[path_index];
+    if(path_comp >= cproof.children.length) {
+        return cproof.proof;
+    }
+    const subproof = cproof.children[path_comp];
+    const { proof: tree } = cproof;
+    switch(tree.kind) {
+        case "axiom":
+        case "pending": {
+            return tree;
+        }
+        case "negation_left":
+        case "negation_right":
+        case "lollipop_right":
+        case "tensor_left":
+        case "par_right":
+        case "with_left":
+        case "plus_right":
+        case "ofcourse_left_multiplex":
+        case "whynot_right_multiplex":
+        case "ofcourse_left_dereliction":
+        case "whynot_right_dereliction":
+        case "ofcourse_right":
+        case "whynot_left": {
+            if(path_comp >= 1) {
+                return tree;
+            }
+            let new_tree = Object.assign({}, tree);
+            new_tree.child = actOnProposition(subproof, path, index, option, path_index + 1);
+            return new_tree;
+        }
+        case "lollipop_left": {
+            if(path_comp >= 2) {
+                return tree;
+            }
+            let new_tree = Object.assign({}, tree);
+            if(path_comp === 0) {
+                new_tree.child_left = actOnProposition(subproof, path, index, option, path_index + 1);
+            } else {
+                new_tree.child_right = actOnProposition(subproof, path, index, option, path_index + 1);
+            }
+            return new_tree;
+        }
+        case "tensor_right":
+        case "par_left":
+        case "with_right":
+        case "plus_left": {
+            if(path_comp >= tree.children.length) {
+                return tree;
+            }
+            let new_tree = Object.assign({}, tree);
+            new_tree.children = Array.from(new_tree.children);
+            new_tree.children[path_comp] = actOnProposition(subproof, path, index, option, path_index + 1);
+            return new_tree;
+        }
+    }
+}
+
+function actOnPropositionInner(
+    cproof: CheckedProof, index: string, option: number | undefined): Proof {
+    if(cproof.proof.kind !== "pending") return cproof.proof;
+    const entry = cproof.env.props.get(index);
+    if(entry === undefined) return cproof.proof; // NOTE: just an extra confirmation
+    const pending: Pending = { kind: "pending" };
+    switch(entry.prop.kind) {
+        case "atomic": {
+            // TODO
+            return cproof.proof;
+        }
+        case "negation": {
+            if(entry.direction === "left") {
+                return { kind: "negation_left", index, child: pending };
+            } else {
+                return { kind: "negation_left", index, child: pending };
+            }
+        }
+        case "lollipop": {
+            if(entry.direction === "left") {
+                return { kind: "lollipop_left", index, child_left: pending, child_right: pending };
+            } else {
+                return { kind: "lollipop_right", index, child: pending };
+            }
+        }
+        case "tensor": {
+            if(entry.direction === "left") {
+                return { kind: "tensor_left", index, child: pending };
+            } else {
+                return { kind: "tensor_right", index, children: entry.prop.children.map(() => pending) };
+            }
+        }
+        case "par": {
+            if(entry.direction === "left") {
+                return { kind: "par_left", index, children: entry.prop.children.map(() => pending) };
+            } else {
+                return { kind: "par_right", index, child: pending };
+            }
+        }
+        case "with": {
+            if(entry.direction === "left") {
+                const option_index = option === undefined ? 0 : option;
+                return { kind: "with_left", index, child: pending, option_index };
+            } else {
+                return { kind: "with_right", index, children: entry.prop.children.map(() => pending) };
+            }
+        }
+        case "plus": {
+            if(entry.direction === "left") {
+                return { kind: "plus_left", index, children: entry.prop.children.map(() => pending) };
+            } else {
+                const option_index = option === undefined ? 0 : option;
+                return { kind: "plus_right", index, child: pending, option_index };
+            }
+        }
+        case "ofcourse":
+        case "whynot": {
+            // TODO
+            return cproof.proof;
+        }
+    }
+}

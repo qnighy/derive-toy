@@ -25,6 +25,14 @@ export default connect(
                 type: 'HOVER',
                 path,
             })
-        }
+        },
+        act_on_proposition: (path: PropositionPath, paired: boolean, option: number | undefined): void => {
+            dispatch({
+                type: 'PROPOSITION',
+                path,
+                paired,
+                option,
+            })
+        },
     })
 )(DeriveTree)

@@ -15,6 +15,7 @@ interface Props {
     expand: (path: number[], new_expanded: boolean) => void,
     close_tree: (path: number[]) => void,
     hover: (path: PropositionPath | null) => void,
+    act_on_proposition: (path: PropositionPath, paired: boolean, option: number | undefined) => void,
 }
 
 export interface UiState {
@@ -46,9 +47,9 @@ export function reduceExpanded(ui: UiState, path: number[], new_expanded: boolea
 
 export class DeriveTree extends React.Component<Props, {}> {
     render() {
-        const { cproof, ui, expand, close_tree, hover } = this.props;
+        const { cproof, ui, expand, close_tree, hover, act_on_proposition } = this.props;
         return <div className="DeriveTree-root">
-            <DeriveTreeNode cproof={cproof} ui={ui.node} path={[]} hover_on={ui.hover_on} expand={expand} close_tree={close_tree} hover={hover} />
+            <DeriveTreeNode cproof={cproof} ui={ui.node} path={[]} hover_on={ui.hover_on} expand={expand} close_tree={close_tree} hover={hover} act_on_proposition={act_on_proposition} />
         </div>;
     }
 }

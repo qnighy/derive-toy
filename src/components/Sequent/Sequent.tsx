@@ -8,6 +8,7 @@ interface Props {
     path: number[];
     hover_on: PropositionPath | null;
     hover: (path: PropositionPath | null) => void,
+    act_on_proposition: (path: PropositionPath, paired: boolean, option: number | undefined) => void,
 }
 
 export class PropositionPath {
@@ -65,22 +66,29 @@ export class Sequent extends React.Component<Props, {}> {
         )
     }
     render_proposition(index: string, prop: Linear.PropositionEntry): JSX.Element {
-        const { cproof, path, hover_on, hover } = this.props;
+        const { cproof, path, hover_on, hover, act_on_proposition } = this.props;
         const actionability = cproof.actionable_on(index);
         const actionableClass = actionability === "actionable" || actionability === "paired" ? "Sequent-actionable" : "Sequent-inactionable";
-        const each_action = actionability === "piecewise" ? (i: number) => {} : undefined; // TODO
+        const each_action = actionability === "piecewise" ? (i: number) => {
+            act_on_proposition(new PropositionPath(path, index), false, i);
+        } : undefined;
         const usageClass = `Sequent-usage-${prop.usage}`;
         const hoverClass =
             hover_on === null ? "Sequent-no-hover" :
             hover_on.is_exact(path, index) ? "Sequent-hover" :
             hover_on.is_parent(path, index) ? "Sequent-parent-hover" : "Sequent-no-hover";
+        const handleClick = () => {
+            if(actionability === "actionable" || actionability === "paired") {
+                act_on_proposition(new PropositionPath(path, index), actionability === "paired", undefined);
+            }
+        };
         const handleHover = () => {
             hover(new PropositionPath(path, index));
         };
         const handleUnhover = () => {
             hover(null);
         };
-        return <span key={index} className={`${actionableClass} ${usageClass} ${hoverClass}`} onMouseOver={handleHover} onMouseOut={handleUnhover}><PrettyProposition proposition={prop.prop} each_action={each_action} /></span>;
+        return <span key={index} className={`${actionableClass} ${usageClass} ${hoverClass}`} onClick={handleClick} onMouseOver={handleHover} onMouseOut={handleUnhover}><PrettyProposition proposition={prop.prop} each_action={each_action} /></span>;
     }
 }
 
