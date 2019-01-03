@@ -24,14 +24,21 @@
     text-align: center;
 }
 
-.DeriveTreeNode-menu {
+.DeriveTreeNode-menu-left {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 80%;
+}
+
+.DeriveTreeNode-menu-right {
     position: absolute;
     bottom: 0;
     right: 0;
     font-size: 80%;
 }
 
-button.DeriveTreeNode-expand-button {
+button.DeriveTreeNode-button {
 	background: none;
 	color: inherit;
 	border: none;

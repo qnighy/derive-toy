@@ -71,9 +71,14 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
                 <div className="DeriveTreeNode-sequent">
                     <Sequent env={ cproof.env } />
                 </div>
-                <span className="DeriveTreeNode-menu">
-                    <button className="DeriveTreeNode-expand-button" onClick={this.handleToggle}>
+                <span className="DeriveTreeNode-menu-left">
+                    <button className="DeriveTreeNode-button DeriveTreeNode-expand-button" onClick={this.handleToggle}>
                         <FontAwesomeIcon icon={ ui.expanded ? "minus-square" : "plus-square" } />
+                    </button>
+                </span>
+                <span className="DeriveTreeNode-menu-right">
+                    <button className="DeriveTreeNode-button DeriveTreeNode-close-button">
+                        <FontAwesomeIcon icon="times-circle" />
                     </button>
                 </span>
             </div>
