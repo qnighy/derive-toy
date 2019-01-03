@@ -65,8 +65,24 @@ function reduce(state: ReduxState = initialState, action: ReduxAction): ReduxSta
             return new_state;
         }
         case 'PROPOSITION': {
+            let pairing_index: string | null = null;
+            if(action.paired) {
+                if(state.ui.pairing_with === null) {
+                    let new_state: ReduxState = Object.assign({}, state);
+                    new_state.ui = Object.assign({}, new_state.ui);
+                    new_state.ui.pairing_with = action.path;
+                    return new_state;
+                }
+                if(!action.path.equal_path(state.ui.pairing_with.path)) {
+                    let new_state: ReduxState = Object.assign({}, state);
+                    new_state.ui = Object.assign({}, new_state.ui);
+                    new_state.ui.pairing_with = null;
+                    return new_state;
+                }
+                pairing_index = state.ui.pairing_with.index;
+            }
             // TODO: paired case
-            const new_tree = Linear.actOnProposition(state.cproof, action.path.path, action.path.index, action.option);
+            const new_tree = Linear.actOnProposition(state.cproof, action.path.path, action.path.index, pairing_index, action.option);
             const new_cproof = Linear.check_proof(state.cproof.env, new_tree);
             const new_ui = updateUiStateFromProof(new_cproof, state.ui);
             return {

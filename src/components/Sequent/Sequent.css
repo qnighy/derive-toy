@@ -24,6 +24,10 @@
     background-color: #ddd;
 }
 
+span.Sequent-pairing-state {
+    border: 1px dashed blue;
+}
+
 .Sequent-actionable {
     cursor: pointer;
 }

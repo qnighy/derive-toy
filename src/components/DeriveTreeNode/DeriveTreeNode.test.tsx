@@ -12,6 +12,6 @@ it('renders without crashing', () => {
     const ui = updateUiStateFromProof(cproof);
 
     const div = document.createElement('div');
-    ReactDOM.render(<DeriveTreeNode cproof={Linear.example()} ui={ui} path={[]} hover_on={null} expand={() => {}} close_tree={() => {}} hover={() => {}} act_on_proposition={() => {}} />, div);
+    ReactDOM.render(<DeriveTreeNode cproof={Linear.example()} ui={ui} path={[]} hover_on={null} pairing_with={null} expand={() => {}} close_tree={() => {}} hover={() => {}} act_on_proposition={() => {}} />, div);
     ReactDOM.unmountComponentAtNode(div);
 });

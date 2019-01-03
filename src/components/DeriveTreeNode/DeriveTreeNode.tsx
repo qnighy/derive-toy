@@ -9,6 +9,7 @@ interface Props {
     ui: UiState,
     path: number[],
     hover_on: PropositionPath | null,
+    pairing_with: PropositionPath | null;
     expand: (path: number[], new_expanded: boolean) => void,
     close_tree: (path: number[]) => void,
     hover: (path: PropositionPath | null) => void,
@@ -66,14 +67,14 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
         return !this.foldable() || ui.expanded;
     }
     render() {
-        const { cproof, ui, path, hover_on, expand, close_tree, hover, act_on_proposition } = this.props;
+        const { cproof, ui, path, hover_on, pairing_with, expand, close_tree, hover, act_on_proposition } = this.props;
         const foldableClass = this.foldable() ? "DeriveTreeNode-foldable" : "DeriveTreeNode-nonfoldable";
         const expandClass = this.expanded() ? "DeriveTreeNode-expanded" : "DeriveTreeNode-folded";
         const localPendingClass = cproof.proof.kind === "pending" ? "DeriveTreeNode-local-pending" : "DeriveTreeNode-local-done";
         return <div className="DeriveTreeNode-subtree">
             <div className={`DeriveTreeNode-node ${localPendingClass}`}>
                 <div className="DeriveTreeNode-sequent">
-                    <Sequent cproof={cproof} path={path} hover_on={hover_on} hover={hover} act_on_proposition={act_on_proposition} />
+                    <Sequent cproof={cproof} path={path} hover_on={hover_on} pairing_with={pairing_with} hover={hover} act_on_proposition={act_on_proposition} />
                 </div>
                 <span className="DeriveTreeNode-menu-left">
                     <button className={`DeriveTreeNode-button DeriveTreeNode-expand-button ${foldableClass}`} onClick={this.handleToggle}>
@@ -92,7 +93,7 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
                         let subpath = Array.from(path);
                         subpath.push(i);
                         return <div key={ `childproof${i}` } className="DeriveTreeNode-child">
-                            <DeriveTreeNode cproof={child} ui={ui.children[i]} path={subpath} hover_on={hover_on} expand={expand} close_tree={close_tree} hover={hover} act_on_proposition={act_on_proposition} />
+                            <DeriveTreeNode cproof={child} ui={ui.children[i]} path={subpath} hover_on={hover_on} pairing_with={pairing_with} expand={expand} close_tree={close_tree} hover={hover} act_on_proposition={act_on_proposition} />
                         </div>;
                     })
                 }

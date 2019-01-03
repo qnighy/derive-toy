@@ -7,12 +7,20 @@ interface Props {
     cproof: Linear.CheckedProof;
     path: number[];
     hover_on: PropositionPath | null;
+    pairing_with: PropositionPath | null;
     hover: (path: PropositionPath | null) => void,
     act_on_proposition: (path: PropositionPath, paired: boolean, option: number | undefined) => void,
 }
 
 export class PropositionPath {
     constructor(public readonly path: number[], public readonly index: string) {}
+    equal_path(path: number[]): boolean {
+        if(path.length !== this.path.length) return false;
+        for(let i = 0; i < path.length; i++) {
+            if(path[i] !== this.path[i]) return false;
+        }
+        return true;
+    }
     is_parent(path: number[], index: string): boolean {
         for(let i = 0; i < path.length; i++) {
             if(path[i] !== this.path[i]) return false;
@@ -66,7 +74,7 @@ export class Sequent extends React.Component<Props, {}> {
         )
     }
     render_proposition(index: string, prop: Linear.PropositionEntry): JSX.Element {
-        const { cproof, path, hover_on, hover, act_on_proposition } = this.props;
+        const { cproof, path, hover_on, pairing_with, hover, act_on_proposition } = this.props;
         const actionability = cproof.actionable_on(index);
         const actionableClass = actionability === "actionable" || actionability === "paired" ? "Sequent-actionable" : "Sequent-inactionable";
         const each_action = actionability === "piecewise" ? (i: number) => {
@@ -77,6 +85,9 @@ export class Sequent extends React.Component<Props, {}> {
             hover_on === null ? "Sequent-no-hover" :
             hover_on.is_exact(path, index) ? "Sequent-hover" :
             hover_on.is_parent(path, index) ? "Sequent-parent-hover" : "Sequent-no-hover";
+        const pairingClass =
+            pairing_with === null ? "Sequent-no-pairing-state" :
+            pairing_with.is_exact(path, index) ? "Sequent-pairing-state" : "Sequent-no-pairing-state";
         const handleClick = () => {
             if(actionability === "actionable" || actionability === "paired") {
                 act_on_proposition(new PropositionPath(path, index), actionability === "paired", undefined);
@@ -88,7 +99,7 @@ export class Sequent extends React.Component<Props, {}> {
         const handleUnhover = () => {
             hover(null);
         };
-        return <span key={index} className={`${actionableClass} ${usageClass} ${hoverClass}`} onClick={handleClick} onMouseOver={handleHover} onMouseOut={handleUnhover}><PrettyProposition proposition={prop.prop} each_action={each_action} /></span>;
+        return <span key={index} className={`${actionableClass} ${usageClass} ${hoverClass} ${pairingClass}`} onClick={handleClick} onMouseOver={handleHover} onMouseOut={handleUnhover}><PrettyProposition proposition={prop.prop} each_action={each_action} /></span>;
     }
 }
 

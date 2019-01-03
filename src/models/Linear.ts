@@ -855,9 +855,10 @@ export function closeTree(tree: Proof, path: number[], path_index: number = 0): 
 
 export function actOnProposition(
     cproof: CheckedProof, path: number[], index: string,
+    pairing_index: string | null,
     option: number | undefined, path_index: number = 0): Proof {
     if(path_index >= path.length) {
-        return actOnPropositionInner(cproof, index, option);
+        return actOnPropositionInner(cproof, index, pairing_index, option);
     }
     const path_comp = path[path_index];
     if(path_comp >= cproof.children.length) {
@@ -887,7 +888,7 @@ export function actOnProposition(
                 return tree;
             }
             let new_tree = Object.assign({}, tree);
-            new_tree.child = actOnProposition(subproof, path, index, option, path_index + 1);
+            new_tree.child = actOnProposition(subproof, path, index, pairing_index, option, path_index + 1);
             return new_tree;
         }
         case "lollipop_left": {
@@ -896,9 +897,9 @@ export function actOnProposition(
             }
             let new_tree = Object.assign({}, tree);
             if(path_comp === 0) {
-                new_tree.child_left = actOnProposition(subproof, path, index, option, path_index + 1);
+                new_tree.child_left = actOnProposition(subproof, path, index, pairing_index, option, path_index + 1);
             } else {
-                new_tree.child_right = actOnProposition(subproof, path, index, option, path_index + 1);
+                new_tree.child_right = actOnProposition(subproof, path, index, pairing_index, option, path_index + 1);
             }
             return new_tree;
         }
@@ -911,22 +912,39 @@ export function actOnProposition(
             }
             let new_tree = Object.assign({}, tree);
             new_tree.children = Array.from(new_tree.children);
-            new_tree.children[path_comp] = actOnProposition(subproof, path, index, option, path_index + 1);
+            new_tree.children[path_comp] = actOnProposition(subproof, path, index, pairing_index, option, path_index + 1);
             return new_tree;
         }
     }
 }
 
 function actOnPropositionInner(
-    cproof: CheckedProof, index: string, option: number | undefined): Proof {
+    cproof: CheckedProof, index: string, pairing_index: string | null, option: number | undefined): Proof {
     if(cproof.proof.kind !== "pending") return cproof.proof;
     const entry = cproof.env.props.get(index);
     if(entry === undefined) return cproof.proof; // NOTE: just an extra confirmation
     const pending: Pending = { kind: "pending" };
     switch(entry.prop.kind) {
         case "atomic": {
-            // TODO
-            return cproof.proof;
+            if(pairing_index === null) return cproof.proof; // NOTE: just an extra confirmation
+            const pairing_entry = cproof.env.props.get(pairing_index);
+            if(pairing_entry === undefined) return cproof.proof; // NOTE: just an extra confirmation
+            let unify_success: boolean = false;
+            try {
+                unify(entry.prop, pairing_entry.prop);
+                unify_success = true;
+            } catch(e) {
+                if(e instanceof ProofCheckException) {}
+                else throw e;
+            }
+            if(!unify_success) return cproof.proof;
+            if(entry.direction === "left" && pairing_entry.direction === "right") {
+                return { kind: "axiom", left_index: index, right_index: pairing_index };
+            } else if(entry.direction === "right" && pairing_entry.direction === "left") {
+                return { kind: "axiom", left_index: pairing_index, right_index: index };
+            } else {
+                return cproof.proof;
+            }
         }
         case "negation": {
             if(entry.direction === "left") {
