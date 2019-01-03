@@ -1,13 +1,14 @@
 import {createStore, combineReducers, Action} from 'redux'
 import * as Linear from './models/Linear';
 import { UiState, updateUiStateFromProof, reduceExpanded } from './components/DeriveTree/DeriveTree';
+import { PropositionPath } from './components/Sequent/Sequent';
 
 export type ReduxState = {
     cproof: Linear.CheckedProof,
     ui: UiState,
 }
 
-export type ReduxAction = ExpandAction | CloseAction
+export type ReduxAction = ExpandAction | CloseAction | HoverAction
 
 interface ExpandAction {
     type: 'EXPAND_TREE';
@@ -18,6 +19,11 @@ interface ExpandAction {
 interface CloseAction {
     type: 'CLOSE_TREE';
     path: number[];
+}
+
+interface HoverAction {
+    type: 'HOVER';
+    path: PropositionPath | null;
 }
 
 const initialState: ReduxState = {
@@ -40,6 +46,12 @@ function reduce(state: ReduxState = initialState, action: ReduxAction): ReduxSta
                 cproof: new_cproof,
                 ui: new_ui,
             };
+        }
+        case 'HOVER': {
+            let new_state: ReduxState = Object.assign({}, state);
+            new_state.ui = Object.assign({}, new_state.ui);
+            new_state.ui.hover_on = action.path;
+            return new_state;
         }
     }
     return state;

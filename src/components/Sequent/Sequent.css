@@ -9,3 +9,17 @@
 .Sequent-usage-none {
     color: #ddd;
 }
+
+.Sequent-no-hover {
+    border: 1px solid rgba(255, 255, 255, 0);
+}
+
+.Sequent-parent-hover {
+    border: 1px solid rgba(255, 255, 255, 0);
+    background-color: #ddd;
+}
+
+.Sequent-hover {
+    border: 1px solid red;
+    background-color: #ddd;
+}

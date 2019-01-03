@@ -2,6 +2,7 @@ import { ReduxAction, ReduxState } from "../../store";
 import { connect } from "react-redux";
 import { Dispatch } from "react";
 import { DeriveTree } from "./DeriveTree";
+import { PropositionPath } from "../Sequent/Sequent";
 
 export default connect(
     (state: ReduxState) => ({ cproof: state.cproof, ui: state.ui }),
@@ -19,5 +20,11 @@ export default connect(
                 path,
             })
         },
+        hover: (path: PropositionPath | null): void => {
+            dispatch({
+                type: 'HOVER',
+                path,
+            })
+        }
     })
 )(DeriveTree)

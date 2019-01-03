@@ -5,6 +5,26 @@ import './Sequent.css'
 
 interface Props {
     env: Linear.Environment;
+    path: number[];
+    hover_on: PropositionPath | null;
+    hover: (path: PropositionPath | null) => void,
+}
+
+export class PropositionPath {
+    constructor(public readonly path: number[], public readonly index: string) {}
+    is_parent(path: number[], index: string): boolean {
+        for(let i = 0; i < path.length; i++) {
+            if(path[i] !== this.path[i]) return false;
+        }
+        return `${this.index}.`.startsWith(`${index}.`);
+    }
+    is_exact(path: number[], index: string): boolean {
+        if(path.length !== this.path.length) return false;
+        for(let i = 0; i < path.length; i++) {
+            if(path[i] !== this.path[i]) return false;
+        }
+        return this.index === index;
+    }
 }
 
 export class Sequent extends React.Component<Props, {}> {
@@ -29,25 +49,34 @@ export class Sequent extends React.Component<Props, {}> {
             <span>
                 {
                     join_elements(
-                        left_props.map(([index, prop]) => {
-                            const usageClass = `Sequent-usage-${prop.usage}`;
-                            return <span key={index} className={`${usageClass}`}><PrettyProposition proposition={prop.prop} /></span>;
-                        }),
+                        left_props.map(([index, prop]) => this.render_proposition(index, prop)),
                         ", "
                     )
                 }
                 { " ⊢ " }
                 {
                     join_elements(
-                        right_props.map(([index, prop]) => {
-                            const usageClass = `Sequent-usage-${prop.usage}`;
-                            return <span key={index} className={`${usageClass}`}><PrettyProposition proposition={prop.prop} /></span>;
-                        }),
+                        right_props.map(([index, prop]) => this.render_proposition(index, prop)),
                         ", "
                     )
                 }
             </span>
         )
+    }
+    render_proposition(index: string, prop: Linear.PropositionEntry): JSX.Element {
+        const { path, hover_on, hover } = this.props;
+        const usageClass = `Sequent-usage-${prop.usage}`;
+        const hoverClass =
+            hover_on === null ? "Sequent-no-hover" :
+            hover_on.is_exact(path, index) ? "Sequent-hover" :
+            hover_on.is_parent(path, index) ? "Sequent-parent-hover" : "Sequent-no-hover";
+        const handleHover = () => {
+            hover(new PropositionPath(path, index));
+        };
+        const handleUnhover = () => {
+            hover(null);
+        };
+        return <span key={index} className={`${usageClass} ${hoverClass}`} onMouseOver={handleHover} onMouseOut={handleUnhover}><PrettyProposition proposition={prop.prop} /></span>;
     }
 }
 
