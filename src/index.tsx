@@ -12,7 +12,12 @@ library.add(faMinusSquare, faPlusSquare, faTimesCircle)
 
 ReactDOM.render(
     <Provider store={store}>
-        <DeriveTree />
+        <div id="main">
+            <h1>Derive Toy</h1>
+        </div>
+        <div id="playground">
+            <DeriveTree />
+        </div>
     </Provider>,
     document.getElementById('root')
 );
