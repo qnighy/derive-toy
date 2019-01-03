@@ -1,15 +1,24 @@
-import { pp_prop, newTensor, newAtomic, newLollipop, Proof, check_proof, Environment } from "./Linear";
+import { pp_prop, Propositions, Proof, check_proof, Environment } from "./Linear";
 
 it('pretty prints tensor', () => {
-    expect(pp_prop(newTensor([newAtomic("A"), newAtomic("B")]))).toBe("A ⊗ B")
+    expect(pp_prop(Propositions.newTensor([Propositions.newAtomic("A"), Propositions.newAtomic("B")]))).toBe("A ⊗ B")
 })
 
 it('pretty prints one', () => {
-    expect(pp_prop(newTensor([]))).toBe("1")
+    expect(pp_prop(Propositions.newTensor([]))).toBe("1")
 })
 
 it('checks proof', () => {
-    const prop = newLollipop(newTensor([newAtomic("A"), newAtomic("B")]), newTensor([newAtomic("B"), newAtomic("A")]));
+    const prop = Propositions.newLollipop(
+        Propositions.newTensor([
+            Propositions.newAtomic("A"),
+            Propositions.newAtomic("B"),
+        ]),
+        Propositions.newTensor([
+            Propositions.newAtomic("B"),
+            Propositions.newAtomic("A"),
+        ]),
+    );
     const proof: Proof = {
         kind: "lollipop_right",
         index: '0',

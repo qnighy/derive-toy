@@ -1,86 +1,16 @@
-export interface Atomic {
-    readonly kind: "atomic";
-    readonly name: string;
-}
+import * as Propositions from './Linear/Propositions';
 
-export interface Negation {
-    readonly kind: "negation";
-    readonly child: Proposition;
-}
-
-export interface Lollipop {
-    readonly kind: "lollipop";
-    readonly assumption: Proposition;
-    readonly consequence: Proposition;
-}
-
-export interface Tensor {
-    readonly kind: "tensor";
-    readonly children: ReadonlyArray<Proposition>;
-}
-
-export interface Par {
-    readonly kind: "par";
-    readonly children: ReadonlyArray<Proposition>;
-}
-
-export interface With {
-    readonly kind: "with";
-    readonly children: ReadonlyArray<Proposition>;
-}
-
-export interface Plus {
-    readonly kind: "plus";
-    readonly children: ReadonlyArray<Proposition>;
-}
-
-export interface OfCourse {
-    readonly kind: "ofcourse";
-    readonly child: Proposition;
-}
-
-export interface WhyNot {
-    readonly kind: "whynot";
-    readonly child: Proposition;
-}
-
-export type Proposition = Atomic | Negation | Lollipop | Tensor | Par | With | Plus | OfCourse | WhyNot;
-
-export function newAtomic(name: string): Atomic {
-    return { kind: "atomic", name }
-}
-
-export function newNegation(child: Proposition): Negation {
-    return { kind: "negation", child }
-}
-
-export function newLollipop(assumption: Proposition, consequence: Proposition): Lollipop {
-    return { kind: "lollipop", assumption, consequence }
-}
-
-export function newTensor(children: ReadonlyArray<Proposition>): Tensor {
-    return { kind: "tensor", children }
-}
-
-export function newPar(children: ReadonlyArray<Proposition>): Par {
-    return { kind: "par", children }
-}
-
-export function newWith(children: ReadonlyArray<Proposition>): With {
-    return { kind: "with", children }
-}
-
-export function newPlus(children: ReadonlyArray<Proposition>): Plus {
-    return { kind: "plus", children }
-}
-
-export function newOfCourse(child: Proposition): OfCourse {
-    return { kind: "ofcourse", child }
-}
-
-export function newWhyNot(child: Proposition): WhyNot {
-    return { kind: "whynot", child }
-}
+export { Propositions };
+export type Atomic = Propositions.Atomic;
+export type Negation = Propositions.Negation;
+export type Lollipop = Propositions.Lollipop;
+export type Tensor = Propositions.Tensor;
+export type Par = Propositions.Par;
+export type With = Propositions.With;
+export type Plus = Propositions.Plus;
+export type OfCourse = Propositions.OfCourse;
+export type WhyNot = Propositions.WhyNot;
+export type Proposition = Propositions.Proposition;
 
 export function pp_prop(p: Proposition): string {
     const lv = prop_level(p);
@@ -759,7 +689,16 @@ function exhaustive(x: never): never {
 }
 
 export function example(): CheckedProof {
-    const prop = newLollipop(newTensor([newAtomic("A"), newAtomic("B")]), newTensor([newAtomic("B"), newAtomic("A")]));
+    const prop = Propositions.newLollipop(
+        Propositions.newTensor([
+            Propositions.newAtomic("A"),
+            Propositions.newAtomic("B"),
+        ]),
+        Propositions.newTensor([
+            Propositions.newAtomic("B"),
+            Propositions.newAtomic("A"),
+        ]),
+    );
     const proof: Proof = {
         kind: "lollipop_right",
         index: '0',
