@@ -80,8 +80,9 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
         const { cproof, ui, path, expand, close_tree } = this.props;
         const foldableClass = this.foldable() ? "DeriveTreeNode-foldable" : "DeriveTreeNode-nonfoldable";
         const expandClass = this.expanded() ? "DeriveTreeNode-expanded" : "DeriveTreeNode-folded";
+        const localPendingClass = cproof.proof.kind === "pending" ? "DeriveTreeNode-local-pending" : "DeriveTreeNode-local-done";
         return <div className="DeriveTreeNode-subtree">
-            <div className="DeriveTreeNode-node">
+            <div className={`DeriveTreeNode-node ${localPendingClass}`}>
                 <div className="DeriveTreeNode-sequent">
                     <Sequent env={ cproof.env } />
                 </div>
@@ -91,7 +92,7 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
                     </button>
                 </span>
                 <span className="DeriveTreeNode-menu-right">
-                    <button className="DeriveTreeNode-button DeriveTreeNode-close-button" onClick={this.handleClose}>
+                    <button className={`DeriveTreeNode-button DeriveTreeNode-close-button ${localPendingClass}`} onClick={this.handleClose}>
                         <FontAwesomeIcon icon="times-circle" />
                     </button>
                 </span>

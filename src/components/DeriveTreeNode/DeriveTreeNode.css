@@ -13,9 +13,12 @@
 
 .DeriveTreeNode-node {
     grid-area: "node";
-    border-bottom: 1px black solid;
 
     position: relative;
+}
+
+.DeriveTreeNode-node.DeriveTreeNode-local-done {
+    border-bottom: 1px black solid;
 }
 
 .DeriveTreeNode-sequent {
@@ -49,6 +52,10 @@ button.DeriveTreeNode-button {
 }
 
 button.DeriveTreeNode-expand-button.DeriveTreeNode-nonfoldable {
+    display: none;
+}
+
+button.DeriveTreeNode-close-button.DeriveTreeNode-local-pending {
     display: none;
 }
 
