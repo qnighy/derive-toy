@@ -128,3 +128,118 @@ export type Proof =
     | OfCourseLeftMultiplex | OfCourseLeftDereliction | OfCourseRight
     | WhyNotLeft | WhyNotRightMultiplex | WhyNotRightDereliction
     | Pending
+
+export class BoundsException implements Error {
+    public name = 'BoundsException';
+    constructor(public message: string) {}
+}
+
+export function child_proof(p: Proof, i: number): Proof {
+    switch(p.kind) {
+        case "axiom":
+        case "pending": {
+            throw new BoundsException(`index ${i} out of bounds: kind=${p.kind}`);
+        }
+        case "negation_left":
+        case "negation_right":
+        case "lollipop_right":
+        case "tensor_left":
+        case "par_right":
+        case "with_left":
+        case "plus_right":
+        case "ofcourse_left_multiplex":
+        case "whynot_right_multiplex":
+        case "ofcourse_left_dereliction":
+        case "whynot_right_dereliction":
+        case "ofcourse_right":
+        case "whynot_left": {
+            if(i === 0) {
+                return p.child;
+            } else {
+                throw new BoundsException(`index ${i} out of bounds: kind=${p.kind}`);
+            }
+        }
+        case "lollipop_left": {
+            if(i === 0) {
+                return p.child_left;
+            } else if(i === 1) {
+                return p.child_right;
+            } else {
+                throw new BoundsException(`index ${i} out of bounds: kind=${p.kind}`);
+            }
+        }
+        case "tensor_right":
+        case "par_left":
+        case "with_right":
+        case "plus_left": {
+            const child = p.children[i];
+            if(child !== undefined) {
+                return child;
+            } else {
+                throw new BoundsException(`index ${i} out of bounds: kind=${p.kind}, length=${p.children.length}`);
+            }
+        }
+    }
+}
+
+export function map_child_proof(p: Proof, i: number, f: (p: Proof) => Proof): Proof {
+    switch(p.kind) {
+        case "axiom":
+        case "pending": {
+            throw new BoundsException(`index ${i} out of bounds: kind=${p.kind}`);
+        }
+        case "negation_left":
+        case "negation_right":
+        case "lollipop_right":
+        case "tensor_left":
+        case "par_right":
+        case "with_left":
+        case "plus_right":
+        case "ofcourse_left_multiplex":
+        case "whynot_right_multiplex":
+        case "ofcourse_left_dereliction":
+        case "whynot_right_dereliction":
+        case "ofcourse_right":
+        case "whynot_left": {
+            if(i === 0) {
+                return {
+                    ...p,
+                    child: f(p.child),
+                };
+            } else {
+                throw new BoundsException(`index ${i} out of bounds: kind=${p.kind}`);
+            }
+        }
+        case "lollipop_left": {
+            if(i === 0) {
+                return {
+                    ...p,
+                    child_left: f(p.child_left),
+                };
+            } else if(i === 1) {
+                return {
+                    ...p,
+                    child_right: f(p.child_right),
+                };
+            } else {
+                throw new BoundsException(`index ${i} out of bounds: kind=${p.kind}`);
+            }
+        }
+        case "tensor_right":
+        case "par_left":
+        case "with_right":
+        case "plus_left": {
+            const child = p.children[i];
+            if(child !== undefined) {
+                const new_children = Array.from(p.children);
+                new_children[i] = f(child);
+                return {
+                    ...p,
+                    children: new_children,
+                };
+            } else {
+                throw new BoundsException(`index ${i} out of bounds: kind=${p.kind}, length=${p.children.length}`);
+            }
+        }
+    }
+}
