@@ -72,7 +72,7 @@ export class DeriveTreeNode extends React.Component<Props, {}> {
         return <div className="DeriveTreeNode-subtree">
             <div className={`DeriveTreeNode-node ${localPendingClass}`}>
                 <div className="DeriveTreeNode-sequent">
-                    <Sequent env={ cproof.env } path={path} hover_on={hover_on} hover={hover} />
+                    <Sequent cproof={cproof} path={path} hover_on={hover_on} hover={hover} />
                 </div>
                 <span className="DeriveTreeNode-menu-left">
                     <button className={`DeriveTreeNode-button DeriveTreeNode-expand-button ${foldableClass}`} onClick={this.handleToggle}>

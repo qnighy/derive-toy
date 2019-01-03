@@ -4,7 +4,7 @@ import { PrettyProposition } from "../PrettyProposition/PrettyProposition";
 import './Sequent.css'
 
 interface Props {
-    env: Linear.Environment;
+    cproof: Linear.CheckedProof;
     path: number[];
     hover_on: PropositionPath | null;
     hover: (path: PropositionPath | null) => void,
@@ -29,7 +29,8 @@ export class PropositionPath {
 
 export class Sequent extends React.Component<Props, {}> {
     render() {
-        const { env } = this.props;
+        const { cproof } = this.props;
+        const { env } = cproof;
         let indices = Array.from(env.props.keys());
         indices.sort((index1, index2) => {
             const index1num = index1.split('.').map((s) => parseInt(s));
@@ -64,7 +65,10 @@ export class Sequent extends React.Component<Props, {}> {
         )
     }
     render_proposition(index: string, prop: Linear.PropositionEntry): JSX.Element {
-        const { path, hover_on, hover } = this.props;
+        const { cproof, path, hover_on, hover } = this.props;
+        const actionability = cproof.actionable_on(index);
+        const actionableClass = actionability === "actionable" || actionability === "paired" ? "Sequent-actionable" : "Sequent-inactionable";
+        const each_action = actionability === "piecewise" ? (i: number) => {} : undefined; // TODO
         const usageClass = `Sequent-usage-${prop.usage}`;
         const hoverClass =
             hover_on === null ? "Sequent-no-hover" :
@@ -76,7 +80,7 @@ export class Sequent extends React.Component<Props, {}> {
         const handleUnhover = () => {
             hover(null);
         };
-        return <span key={index} className={`${usageClass} ${hoverClass}`} onMouseOver={handleHover} onMouseOut={handleUnhover}><PrettyProposition proposition={prop.prop} /></span>;
+        return <span key={index} className={`${actionableClass} ${usageClass} ${hoverClass}`} onMouseOver={handleHover} onMouseOut={handleUnhover}><PrettyProposition proposition={prop.prop} each_action={each_action} /></span>;
     }
 }
 

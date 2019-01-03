@@ -440,7 +440,43 @@ export class CheckedProof {
         public readonly proof: Proof,
         public readonly children: CheckedProof[],
     ) { }
+
+    actionable_on(index: string): Actionability {
+        if(this.proof.kind !== "pending") return "inactionable";
+        const entry = this.env.props.get(index);
+        if(entry === undefined) return "inactionable"; // NOTE: just an extra confirmation
+        switch(entry.prop.kind) {
+            case "atomic": return "paired";
+            case "negation":
+            case "lollipop":
+            case "tensor":
+            case "par": {
+                return "actionable";
+            }
+            case "with":
+            case "plus": {
+                const with_left = entry.prop.kind === "with" && entry.direction === "left";
+                const plus_right = entry.prop.kind === "plus" && entry.direction === "right";
+                if(with_left || plus_right) {
+                    if(entry.prop.children.length === 0) {
+                        return "inactionable";
+                    } else if(entry.prop.children.length === 1) {
+                        return "actionable";
+                    } else {
+                        return "piecewise";
+                    }
+                }
+                return "actionable";
+            }
+            case "ofcourse":
+            case "whynot": {
+                return "inactionable"; // TODO
+            }
+        }
+    }
 }
+
+export type Actionability = "actionable" | "paired" | "piecewise" | "inactionable";
 
 export function check_proof(env: Environment, proof: Proof): CheckedProof {
     let p1proof = check_proof_phase1(env, proof);

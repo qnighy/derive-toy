@@ -23,3 +23,7 @@
     border: 1px solid red;
     background-color: #ddd;
 }
+
+.Sequent-actionable {
+    cursor: pointer;
+}

@@ -5,6 +5,7 @@ interface Props {
     proposition: Linear.Proposition,
     level?: Level,
     strict?: boolean,
+    each_action?: (i: number) => void,
 }
 
 type Level = "atomic" | "negation" | "modal" | "multiplicative" | "additive" | "implicational";
@@ -13,9 +14,11 @@ let level_max: Level = "implicational";
 
 export class PrettyProposition extends React.Component<Props, {}> {
     render() {
-        const { proposition: p, level: level_, strict: strict_ } = this.props;
+        const { proposition: p, level: level_, strict: strict_, each_action } = this.props;
         const level: Level = level_ || level_max;
         const strict: boolean = strict_ === undefined ? false : strict_;
+
+        const actionableClass = each_action !== undefined ? "PrettyProposition-actionable" : "PrettyProposition-inactionable";
 
         const level_of_p = level_of(p);
         const parenless = level_le(level_of_p, level) && (!strict || level_of_p != level);
@@ -49,9 +52,15 @@ export class PrettyProposition extends React.Component<Props, {}> {
                     const op = ` ${binary_op(p)} `;
                     return <span>{opener}
                         {
-                            join_elements(p.children.map((child, i) =>
-                                <PrettyProposition key={ `child${i}` } proposition={child} level={level_of_p} strict={true} />
-                            ), op)
+                            join_elements(p.children.map((child, i) => {
+                                let action = undefined;
+                                if(each_action !== undefined) {
+                                    action = () => each_action(i);
+                                }
+                                return <span key={ `child${i}` } className={ `${actionableClass}` } onClick={action}>
+                                    <PrettyProposition proposition={child} level={level_of_p} strict={true} />
+                                </span>;
+                            }), op)
                         }
                     {closer}</span>;
                 }
