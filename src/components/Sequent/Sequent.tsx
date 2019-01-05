@@ -88,18 +88,24 @@ export class Sequent extends React.Component<Props, {}> {
         const pairingClass =
             pairing_with === null ? "Sequent-no-pairing-state" :
             pairing_with.is_exact(path, index) ? "Sequent-pairing-state" : "Sequent-no-pairing-state";
-        const handleClick = () => {
+        const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
             if(actionability === "actionable" || actionability === "paired") {
                 act_on_proposition(new PropositionPath(path, index), actionability === "paired", undefined);
+                e.stopPropagation();
             }
         };
-        const handleHover = () => {
+        const handleHover = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
             hover(new PropositionPath(path, index));
+            e.stopPropagation();
         };
-        const handleUnhover = () => {
+        const handleUnhover = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
             hover(null);
         };
-        return <span key={index} className={`${actionableClass} ${usageClass} ${hoverClass} ${pairingClass}`} onClick={handleClick} onMouseOver={handleHover} onMouseOut={handleUnhover}><PrettyProposition proposition={prop.prop} each_action={each_action} /></span>;
+        return <span key={index} className={`Sequent-proposition-extender ${actionableClass}`} onClick={handleClick} onMouseOver={handleHover} onMouseOut={handleUnhover}>
+            <span className={`Sequent-proposition ${actionableClass} ${usageClass} ${hoverClass} ${pairingClass}`} onClick={handleClick} onMouseOver={handleHover}>
+                <PrettyProposition proposition={prop.prop} each_action={each_action} />
+            </span>
+        </span>;
     }
 }
 

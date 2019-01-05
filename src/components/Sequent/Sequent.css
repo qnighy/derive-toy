@@ -1,33 +1,45 @@
-.Sequent-usage-full {
+.Sequent-proposition-extender {
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+    padding: 0.2em 0.5em;
+    margin: -0.2em -0.5em;
+}
+
+.Sequent-proposition {
+    z-index: 2;
+}
+
+.Sequent-proposition.Sequent-usage-full {
     color: black;
 }
 
-.Sequent-usage-partial {
+.Sequent-proposition.Sequent-usage-partial {
     color: gray;
 }
 
-.Sequent-usage-none {
+.Sequent-proposition.Sequent-usage-none {
     color: #ddd;
 }
 
-.Sequent-no-hover {
+.Sequent-proposition.Sequent-no-hover {
     border: 1px solid rgba(255, 255, 255, 0);
 }
 
-.Sequent-parent-hover {
+.Sequent-proposition.Sequent-parent-hover {
     border: 1px solid rgba(255, 255, 255, 0);
     background-color: #ddd;
 }
 
-.Sequent-hover {
+.Sequent-proposition.Sequent-hover {
     border: 1px solid red;
     background-color: #ddd;
 }
 
-span.Sequent-pairing-state {
+span.Sequent-proposition.Sequent-pairing-state {
     border: 1px dashed blue;
 }
 
-.Sequent-actionable {
+.Sequent-proposition-extender.Sequent-actionable {
     cursor: pointer;
 }
