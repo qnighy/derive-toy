@@ -432,36 +432,31 @@ function check_proof_phase2(cproof: CheckedProof, parent_env: Environment | null
             let subprops: Map<string, PropositionEntry>[] = cproof.children.map((child) => new Map(child.env.props));
             // for(let [index, entry] of env.props) {
             for(const [index, entry] of Array.from(env.props)) {
-                if(entry.usage === "none") {
-                    for(const subprops_ of subprops) {
-                        const subprop = subprops_.get(index);
-                        if(subprop === undefined) continue;
-                        if(subprop.usage === "partial") {
-                            subprops_.set(index, {
-                                prop: subprop.prop,
-                                direction: subprop.direction,
-                                usage: "none",
-                            });
-                        }
+                let full_count = 0;
+                let partial_count = 0;
+                let none_count = 0;
+                let undef_count = 0;
+                for(const subprops_ of subprops) {
+                    const subprop = subprops_.get(index);
+                    if(subprop === undefined) undef_count++;
+                    else if(subprop.usage === "full") full_count++;
+                    else if(subprop.usage === "partial") partial_count++;
+                    else if(subprop.usage === "none") none_count++;
+                    else exhaustive(subprop.usage);
+                }
+                if(undef_count > 0) {
+                    if(proof.index !== index) {
+                        throw new ProofCheckException(`undef_count is positive for ${index}, but it's not the target ${proof.index}`);
                     }
                     continue;
                 }
-                const contains_full = subprops.some((subprops_) => {
-                    const subprop = subprops_.get(index);
-                    if(subprop === undefined) return false;
-                    return subprop.usage === "full";
-                })
-                if(contains_full) {
-                    for(const subprops_ of subprops) {
-                        const subprop = subprops_.get(index);
-                        if(subprop === undefined) continue;
-                        if(subprop.usage === "partial") {
-                            subprops_.set(index, {
-                                prop: subprop.prop,
-                                direction: subprop.direction,
-                                usage: "none",
-                            });
-                        }
+                for(const subprops_ of subprops) {
+                    const subprop = subprops_.get(index) as PropositionEntry;
+                    if(subprop.usage !== "partial") continue;
+                    if(entry.usage === "none" || full_count > 0) {
+                        subprops_.set(index, { ...subprop, usage: "none" });
+                    } else if(entry.usage === "full" && full_count === 0 && partial_count === 1) {
+                        subprops_.set(index, { ...subprop, usage: "full" });
                     }
                 }
             }
