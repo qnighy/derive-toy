@@ -127,6 +127,15 @@ function unify_usage(usage1: Usage, usage2: Usage): Usage {
     return usage1;
 }
 
+function unify_usages(usages: ReadonlyArray<Usage>): Usage {
+    const has_full = usages.some((usage) => usage === "full");
+    const has_none = usages.some((usage) => usage === "none");
+    if(has_full && has_none) throw new ProofCheckException(`excepted full, got none`);
+    else if(has_full) return "full";
+    else if(has_none) return "none";
+    else return "partial";
+}
+
 function usage_sum(usages: ReadonlyArray<Usage>): Usage {
     let full_found = false;
     let partial_found = false;
@@ -343,13 +352,52 @@ function check_proof_phase1(env: Environment, proof: Proof): CheckedProof {
         }
         case "with_left":
         case "plus_right": {
-            // TODO
-            throw new ProofCheckException("unimplemented: with_left");
+            const dir: Direction = proof.kind === "with_left" ? "left" : "right";
+            const kind: "with" | "plus" = proof.kind === "with_left" ? "with" : "plus";
+            const target = env.get_prop(proof.index, dir);
+            if(target.kind !== kind) throw new ProofCheckException(`expected ${kind}, got ${target.kind}`);
+
+            const target_child = target.children[proof.option_index];
+            if(target_child === undefined) {
+                throw new ProofCheckException(`Invalid option_index ${proof.option_index}: target has ${target.children.length} children`);
+            }
+
+            const subenv = env.replace_prop(proof.index, [[proof.option_index, target_child, false]], false);
+            const subproof = check_proof_phase1(subenv, proof.child);
+
+            const new_env = env.update_usage((index) => {
+                if(index === proof.index) {
+                    return "full";
+                } else {
+                    return subproof.env.get_usage(index);
+                }
+            });
+            return new CheckedProof(new_env, proof, [subproof]);
         }
         case "with_right":
         case "plus_left": {
-            // TODO
-            throw new ProofCheckException("unimplemented: with_right");
+            const dir: Direction = proof.kind === "with_right" ? "right" : "left";
+            const kind: "with" | "plus" = proof.kind === "with_right" ? "with" : "plus";
+            const target = env.get_prop(proof.index, dir);
+            if(target.kind !== kind) throw new ProofCheckException(`expected ${kind}, got ${target.kind}`);
+
+            if(target.children.length != proof.children.length) {
+                throw new ProofCheckException(`expected ${target.children.length} branches, got ${proof.children.length}`);
+            }
+
+            const subenvs = target.children.map((target_child, i) => {
+                return env.replace_prop(proof.index, [[i, target_child, false]], false);
+            });
+            const subproofs = subenvs.map((subenv, i) => check_proof_phase1(subenv, proof.children[i]));
+
+            const new_env = env.update_usage((index) => {
+                if(index === proof.index) {
+                    return "full";
+                } else {
+                    return unify_usages(subproofs.map((subproof) => subproof.env.get_usage(index)));
+                }
+            });
+            return new CheckedProof(new_env, proof, subproofs);
         }
         case "ofcourse_left_multiplex":
         case "whynot_right_multiplex": {
