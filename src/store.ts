@@ -2,7 +2,6 @@ import {createStore, combineReducers, Action} from 'redux'
 import * as Linear from './models/Linear';
 import { UiState, updateUiStateFromProof, reduceExpanded } from './components/DeriveTree/DeriveTree';
 import { PropositionPath } from './components/Sequent/Sequent';
-import { stat } from 'fs';
 
 export type ReduxState = {
     readonly cproof: Linear.CheckedProof,
@@ -38,10 +37,16 @@ interface PropositionAction {
     readonly option?: number;
 }
 
-const initialState: ReduxState = {
-    cproof: Linear.example(),
-    ui: updateUiStateFromProof(Linear.example()),
-};
+const initialState: ReduxState = function() {
+    // const proposition = Linear.Parser.parse("A ⊗ B ⊸ B ⊗ A");
+    const proposition = Linear.Parser.parse("A ⊗ (B ⅋ C) ⊸ (A ⊗ B) ⅋ C");
+    // const proposition = Linear.Parser.parse("A & B ⊸ B & A");
+    const cproof = new Linear.CheckedProof(Linear.Environment.toplevel(proposition), { kind: "pending" }, []);
+    return {
+        cproof,
+        ui: updateUiStateFromProof(cproof),
+    };
+}();
 
 function reduce(state: ReduxState = initialState, action: ReduxAction): ReduxState {
     switch(action.type) {
