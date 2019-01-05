@@ -184,9 +184,9 @@ class Parser {
             expectation = expectations[0];
         } else {
             const last_expectation = expectations.pop();
-            expectation = `${expectations.join(", ")}, or ${last_expectation}`;
+            expectation = `[${expectations.join(", ")} or ${last_expectation}]`;
         }
-        throw new ParseError(`Parse Error at ${token.span}: expected ${expectations}, ${token.kind}`);
+        throw new ParseError(`Parse Error at ${token.span}: expected ${expectation}, got ${token.kind}`);
     }
     parse_toplevel(): Proposition {
         const prop = this.parse_implicational();
