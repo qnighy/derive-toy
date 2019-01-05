@@ -1,9 +1,10 @@
 import * as Propositions from './Linear/Propositions';
 import * as Pretty from './Linear/Pretty';
 import * as Proofs from './Linear/Proofs';
+import * as Parser from './Linear/Parser';
 import { Pending } from './Linear/Proofs';
 
-export { Propositions, Pretty };
+export { Propositions, Pretty, Parser };
 export type Atomic = Propositions.Atomic;
 export type Negation = Propositions.Negation;
 export type Lollipop = Propositions.Lollipop;
