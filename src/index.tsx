@@ -5,6 +5,7 @@ import './index.css';
 import store from './store';
 import * as serviceWorker from './serviceWorker';
 import DeriveTree from './components/DeriveTree/DeriveTreeContainer';
+import PropositionInputContainer from './components/PropositionInput/PropositionInputContainer';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faMinusSquare, faPlusSquare, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 
@@ -14,6 +15,7 @@ ReactDOM.render(
     <Provider store={store}>
         <div id="main">
             <h1>Derive Toy</h1>
+            <PropositionInputContainer />
         </div>
         <div id="playground">
             <DeriveTree />

@@ -4,11 +4,13 @@ import { UiState, updateUiStateFromProof, reduceExpanded } from './components/De
 import { PropositionPath } from './components/Sequent/Sequent';
 
 export type ReduxState = {
+    readonly proposition_text: string,
+    readonly proposition_parse_message: string,
     readonly cproof: Linear.CheckedProof,
     readonly ui: UiState,
 }
 
-export type ReduxAction = DummyActionType | ExpandAction | CloseAction | HoverAction | PropositionAction
+export type ReduxAction = DummyActionType | ExpandAction | CloseAction | HoverAction | PropositionAction | InputPropositionAction | StartParseAction
 
 interface DummyActionType {
     readonly type: '__DUMMY_ACTION__';
@@ -37,12 +39,23 @@ interface PropositionAction {
     readonly option?: number;
 }
 
+interface InputPropositionAction {
+    readonly type: 'INPUT_PROPOSITION';
+    readonly text: string;
+}
+
+interface StartParseAction {
+    readonly type: 'START_PARSE';
+}
+
 const initialState: ReduxState = function() {
     // const proposition = Linear.Parser.parse("A ⊗ B ⊸ B ⊗ A");
     const proposition = Linear.Parser.parse("A ⊗ (B ⅋ C) ⊸ (A ⊗ B) ⅋ C");
     // const proposition = Linear.Parser.parse("A & B ⊸ B & A");
     const cproof = new Linear.CheckedProof(Linear.Environment.toplevel(proposition), { kind: "pending" }, []);
     return {
+        proposition_text: "A ⊗ (B ⅋ C) ⊸ (A ⊗ B) ⅋ C",
+        proposition_parse_message: "",
         cproof,
         ui: updateUiStateFromProof(cproof),
     };
@@ -61,6 +74,7 @@ function reduce(state: ReduxState = initialState, action: ReduxAction): ReduxSta
             const new_cproof = Linear.check_proof(state.cproof.env, new_tree);
             const new_ui = updateUiStateFromProof(new_cproof, state.ui);
             return {
+                ...state,
                 cproof: new_cproof,
                 ui: new_ui,
             };
@@ -102,9 +116,37 @@ function reduce(state: ReduxState = initialState, action: ReduxAction): ReduxSta
             const new_cproof = Linear.check_proof(state.cproof.env, new_tree);
             const new_ui = updateUiStateFromProof(new_cproof, state.ui);
             return {
+                ...state,
                 cproof: new_cproof,
                 ui: new_ui,
             };
+        }
+        case 'INPUT_PROPOSITION': {
+            return {
+                ...state,
+                proposition_text: action.text,
+                proposition_parse_message: "",
+            }
+        }
+        case 'START_PARSE': {
+            try {
+                const proposition = Linear.Parser.parse(state.proposition_text);
+                const cproof = new Linear.CheckedProof(Linear.Environment.toplevel(proposition), { kind: "pending" }, []);
+                return {
+                    ...state,
+                    cproof,
+                    ui: updateUiStateFromProof(cproof),
+                };
+            } catch(e) {
+                if(e instanceof Linear.Parser.ParseError) {
+                    return {
+                        ...state,
+                        proposition_parse_message: e.message,
+                    }
+                } else {
+                    throw e;
+                }
+            }
         }
     }
     return state;

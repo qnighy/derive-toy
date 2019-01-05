@@ -1,6 +1,6 @@
 import { Proposition } from "./Propositions";
 
-class ParseError implements Error {
+export class ParseError implements Error {
     public readonly name = "";
     constructor(public readonly message: string) {}
 }
