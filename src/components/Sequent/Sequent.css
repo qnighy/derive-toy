@@ -8,6 +8,7 @@
 
 .Sequent-proposition {
     z-index: 2;
+    border-radius: 0.2em;
 }
 
 .Sequent-proposition.Sequent-usage-full {
@@ -28,12 +29,16 @@
 
 .Sequent-proposition.Sequent-parent-hover {
     border: 1px solid rgba(255, 255, 255, 0);
-    background-color: #ddd;
+    background-color: #eee;
 }
 
 .Sequent-proposition.Sequent-hover {
-    border: 1px solid red;
-    background-color: #ddd;
+    border: 1px solid #ddd;
+    background-color: #eee;
+}
+
+.Sequent-proposition.Sequent-actionable {
+    border: 1px outset #ccc;
 }
 
 span.Sequent-proposition.Sequent-pairing-state {
