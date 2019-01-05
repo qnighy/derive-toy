@@ -29,7 +29,7 @@ export function updateUiStateFromProof(cproof: Linear.CheckedProof, state?: UiSt
         };
     } else {
         return {
-            expanded: state.expanded,
+            expanded: cproof.children.length === 0 || state.expanded,
             children: cproof.children.map((child, i) => updateUiStateFromProof(child, state.children[i])),
         };
     }
