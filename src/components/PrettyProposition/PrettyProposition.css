@@ -1,0 +1,16 @@
+.PrettyProposition-proposition-extender {
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+    padding: 0.2em 0.5em;
+    margin: -0.2em -0.5em;
+}
+
+.PrettyProposition-proposition-extender.PrettyProposition-actionable {
+    cursor: pointer;
+}
+
+.PrettyProposition-proposition.PrettyProposition-actionable {
+    border-radius: 0.2em;
+    border: 1px outset #ccc;
+}

@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Linear from "../../models/Linear";
+import './PrettyProposition.css';
 
 interface Props {
     readonly proposition: Linear.Proposition,
@@ -15,8 +16,6 @@ let level_max: Level = "implicational";
 export class PrettyProposition extends React.Component<Props, {}> {
     render() {
         const { proposition: p, level = level_max, strict = false, each_action } = this.props;
-
-        const actionableClass = each_action !== undefined ? "PrettyProposition-actionable" : "PrettyProposition-inactionable";
 
         const level_of_p = level_of(p);
         const parenless = level_le(level_of_p, level) && (!strict || level_of_p != level);
@@ -51,13 +50,21 @@ export class PrettyProposition extends React.Component<Props, {}> {
                     return <span>{opener}
                         {
                             join_elements(p.children.map((child, i) => {
-                                let action = undefined;
                                 if(each_action !== undefined) {
-                                    action = () => each_action(i);
+                                    const action = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+                                        each_action(i);
+                                        e.stopPropagation();
+                                    };
+                                    return <span key={ `child${i}` } className="PrettyProposition-proposition-extender PrettyProposition-actionable" onClick={action}>
+                                        <span className="PrettyProposition-proposition PrettyProposition-actionable" onClick={action}>
+                                            <PrettyProposition proposition={child} level={level_of_p} strict={true} />
+                                        </span>
+                                    </span>;
+                                } else {
+                                    return <span key={ `child${i}` }>
+                                        <PrettyProposition proposition={child} level={level_of_p} strict={true} />
+                                    </span>;
                                 }
-                                return <span key={ `child${i}` } className={ `${actionableClass}` } onClick={action}>
-                                    <PrettyProposition proposition={child} level={level_of_p} strict={true} />
-                                </span>;
                             }), op)
                         }
                     {closer}</span>;
